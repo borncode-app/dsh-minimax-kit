@@ -3,7 +3,7 @@
   <h1>dsh-minimax-credit</h1>
   <p><b>Keeps the MiniMax route alive after the Token Plan quota is spent — and shows the credits left.</b></p>
   <p>
-    <a href="https://github.com/borncode-app/dsh-minimax-credit/releases"><img alt="release" src="https://img.shields.io/github/v/release/borncode-app/dsh-minimax-credit?style=flat-square&color=6C4BF6"></a>
+    <a href="https://github.com/borncode-app/dsh-minimax-kit/releases"><img alt="release" src="https://img.shields.io/github/v/tag/borncode-app/dsh-minimax-kit/dsh-minimax-credit?style=flat-square&color=6C4BF6"></a>
     <a href="LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-3DA639?style=flat-square"></a>
     <img alt="plugin" src="https://img.shields.io/badge/DeepSeek%20Harness-plugin-6C4BF6?style=flat-square">
     <img alt="wire" src="https://img.shields.io/badge/wire-Anthropic%20Messages-D97757?style=flat-square">
@@ -86,8 +86,8 @@ It serves a **local Anthropic-Messages proxy** and points the `minimax-api` rout
 ## Install
 
 ```bash
-git clone https://github.com/borncode-app/dsh-minimax-credit.git dsh-minimax-credit
-git clone https://github.com/borncode-app/dsh-minimax-auth.git dsh-minimax-auth
+git clone https://github.com/borncode-app/dsh-minimax-kit.git dsh-minimax-kit
+git clone https://github.com/borncode-app/dsh-minimax-kit/packages/dsh-minimax-auth.git dsh-minimax-auth
 cd dsh-minimax-credit && pnpm install
 ```
 

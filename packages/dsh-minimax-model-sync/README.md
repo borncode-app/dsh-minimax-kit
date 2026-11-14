@@ -3,7 +3,7 @@
   <h1>dsh-minimax-model-sync</h1>
   <p><b>Keeps a provider route's model list in sync with the provider's own models endpoint.</b></p>
   <p>
-    <a href="https://github.com/borncode-app/dsh-minimax-model-sync/releases"><img alt="release" src="https://img.shields.io/github/v/release/borncode-app/dsh-minimax-model-sync?style=flat-square&color=6C4BF6"></a>
+    <a href="https://github.com/borncode-app/dsh-minimax-kit/releases"><img alt="release" src="https://img.shields.io/github/v/tag/borncode-app/dsh-minimax-kit/dsh-minimax-model-sync?style=flat-square&color=6C4BF6"></a>
     <a href="LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-3DA639?style=flat-square"></a>
     <img alt="plugin" src="https://img.shields.io/badge/DeepSeek%20Harness-plugin-6C4BF6?style=flat-square">
     <img alt="row" src="https://img.shields.io/badge/targets-llm--pi--ai-8957e5?style=flat-square">
@@ -53,7 +53,7 @@ It is one small row, no UI, no background polling storm: it syncs at boot and th
 ## Install
 
 ```bash
-git clone https://github.com/borncode-app/dsh-minimax-model-sync.git dsh-minimax-model-sync
+git clone https://github.com/borncode-app/dsh-minimax-kit.git dsh-minimax-kit
 ```
 
 Then:

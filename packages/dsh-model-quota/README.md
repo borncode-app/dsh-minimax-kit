@@ -3,7 +3,7 @@
   <h1>dsh-model-quota</h1>
   <p><b>The selected model's remaining rate limit or balance, right under the composer.</b></p>
   <p>
-    <a href="https://github.com/borncode-app/dsh-model-quota/releases"><img alt="release" src="https://img.shields.io/github/v/release/borncode-app/dsh-model-quota?style=flat-square&color=6C4BF6"></a>
+    <a href="https://github.com/borncode-app/dsh-minimax-kit/releases"><img alt="release" src="https://img.shields.io/github/v/tag/borncode-app/dsh-minimax-kit/dsh-model-quota?style=flat-square&color=6C4BF6"></a>
     <a href="LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-3DA639?style=flat-square"></a>
     <img alt="plugin" src="https://img.shields.io/badge/DeepSeek%20Harness-plugin-6C4BF6?style=flat-square">
     <img alt="providers" src="https://img.shields.io/badge/providers-4-8957e5?style=flat-square">
@@ -50,7 +50,7 @@ Four probe kinds are built in, and a provider you do not list simply shows nothi
   spends one token of the plan.
 - **Credential-aware** — reads named credential records (`credentialRecord`) or env-backed keys (`apiKeyEnv`),
   and can try a list of fallbacks (`apiKeyEnvs`).
-- **Used by others** — [`dsh-auto-continue`](https://github.com/borncode-app/dsh-auto-continue) reads this
+- **Used by others** — [`dsh-auto-continue`](https://github.com/borncode-app/dsh-borncode/packages/dsh-auto-continue) reads this
   endpoint to learn when a limit resets.
 
 ## Requirements
@@ -64,7 +64,7 @@ Four probe kinds are built in, and a provider you do not list simply shows nothi
 ## Install
 
 ```bash
-git clone https://github.com/borncode-app/dsh-model-quota.git dsh-model-quota
+git clone https://github.com/borncode-app/dsh-minimax-kit.git dsh-minimax-kit
 ```
 
 Then:

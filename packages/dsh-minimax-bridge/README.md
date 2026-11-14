@@ -3,7 +3,7 @@
   <h1>dsh-minimax-bridge</h1>
   <p><b>Use everything you already installed in MiniMax Code — skills, agents, MCP servers — from DeepSeek Harness.</b></p>
   <p>
-    <a href="https://github.com/borncode-app/dsh-minimax-bridge/releases"><img alt="release" src="https://img.shields.io/github/v/release/borncode-app/dsh-minimax-bridge?style=flat-square&color=6C4BF6"></a>
+    <a href="https://github.com/borncode-app/dsh-minimax-kit/releases"><img alt="release" src="https://img.shields.io/github/v/tag/borncode-app/dsh-minimax-kit/dsh-minimax-bridge?style=flat-square&color=6C4BF6"></a>
     <a href="LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-3DA639?style=flat-square"></a>
     <img alt="plugin" src="https://img.shields.io/badge/DeepSeek%20Harness-plugin-6C4BF6?style=flat-square">
     <img alt="source" src="https://img.shields.io/badge/reads-~%2F.minimax-8957e5?style=flat-square">
@@ -63,7 +63,7 @@ never syncs, and never takes ownership. MiniMax Code stays the owner and keeps u
 ## Install
 
 ```bash
-git clone https://github.com/borncode-app/dsh-minimax-bridge.git dsh-minimax-bridge
+git clone https://github.com/borncode-app/dsh-minimax-kit.git dsh-minimax-kit
 ```
 
 Then in DSH: **Plugins** → install the bundle from that directory, or:

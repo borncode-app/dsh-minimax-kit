@@ -3,7 +3,7 @@
   <h1>dsh-minimax-checkin</h1>
   <p><b>Claims the MiniMax daily check-in reward from inside DeepSeek Harness.</b></p>
   <p>
-    <a href="https://github.com/borncode-app/dsh-minimax-checkin/releases"><img alt="release" src="https://img.shields.io/github/v/release/borncode-app/dsh-minimax-checkin?style=flat-square&color=6C4BF6"></a>
+    <a href="https://github.com/borncode-app/dsh-minimax-kit/releases"><img alt="release" src="https://img.shields.io/github/v/tag/borncode-app/dsh-minimax-kit/dsh-minimax-checkin?style=flat-square&color=6C4BF6"></a>
     <a href="LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-3DA639?style=flat-square"></a>
     <img alt="plugin" src="https://img.shields.io/badge/DeepSeek%20Harness-plugin-6C4BF6?style=flat-square">
     <img alt="reward" src="https://img.shields.io/badge/reward-daily%20credits-8957e5?style=flat-square">
@@ -78,8 +78,8 @@ The credit lands in the same account, so the MiniMax route in the Harness keeps 
 ## Install
 
 ```bash
-git clone https://github.com/borncode-app/dsh-minimax-checkin.git dsh-minimax-checkin
-git clone https://github.com/borncode-app/dsh-minimax-auth.git dsh-minimax-auth
+git clone https://github.com/borncode-app/dsh-minimax-kit.git dsh-minimax-kit
+git clone https://github.com/borncode-app/dsh-minimax-kit/packages/dsh-minimax-auth.git dsh-minimax-auth
 cd dsh-minimax-checkin && pnpm install
 ```
 
