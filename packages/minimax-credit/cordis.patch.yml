@@ -1,0 +1,26 @@
+# Serves a local Anthropic-Messages proxy in front of the MiniMax route.
+#
+# Point the llm-pi-ai `minimax-api` route's `baseURL` at the proxy origin below
+# (for example http://127.0.0.1:45677/anthropic) because a route's `baseURL` must
+# be a literal origin. The proxy forwards to the Token Plan endpoint first and
+# fails over to the MiniMax Code credit endpoint once the plan quota is spent.
+- insert:
+    - id: minimax-credit
+      name: '@local/dsh-minimax-credit'
+      config:
+        enabled: true
+        listenHost: 127.0.0.1
+        listenPort: 45677
+        minimaxHome: ''
+        buildEnv: prod
+        region: en
+        planBaseURL: https://api.minimax.io/anthropic
+        creditBaseURL: https://agent.minimax.io/mavis/api/v1/llm/v1
+        quotaURL: https://api.minimax.io/v1/api/openplatform/coding_plan/remains
+        creditURL: https://api.minimax.io/backend/account/token_plan_credit
+        membershipURL: https://agent.minimax.io/matrix/api/v1/commerce/get_membership_info
+        walletURL: https://api.minimax.io/account/query_balance
+        apiKeyEnv: MINIMAX_API_KEY
+        quotaCacheMs: 60000
+        creditsCacheMs: 60000
+        refreshSkewMs: 600000

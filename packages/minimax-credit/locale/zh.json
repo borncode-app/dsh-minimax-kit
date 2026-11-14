@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "title": "MiniMax 额度余额与套餐额度",
+    "description": "显示账户剩余 MiniMax 额度（与 MiniMax Code 显示的数字一致），并在 Token Plan 套餐用完后再切换到 MiniMax Code 额度继续工作。"
+  },
+  "credit.title": "MiniMax 额度",
+  "credit.inUse": "额度",
+  "credit.unavailable": "额度不可用",
+  "credit.remaining": "剩余额度",
+  "credit.remainingShort": "剩余 {value}",
+  "credit.purchased": "已购买 {value}",
+  "credit.free": "赠送额度 {value}",
+  "credit.planTier": "套餐：{tier}",
+  "credit.wallet": "钱包余额 {value}",
+  "credit.fallbackOn": "MiniMax 已开启额度回退",
+  "credit.fallbackOff": "MiniMax 已关闭额度回退",
+  "credit.tooltip": "套餐额度已用完，请求将改用 MiniMax 额度继续。",
+  "credit.plan": "套餐窗口",
+  "credit.planRemaining": "剩余 {percent}%",
+  "credit.planSpent": "已用完",
+  "credit.resets": "重置",
+  "credit.weeklyPlan": "每周窗口",
+  "credit.weeklyResets": "每周重置",
+  "credit.zero": "额度余额为 0：套餐也用完时将无法继续请求，需先充值。",
+  "credit.signIn": "请打开 MiniMax Code 重新登录，以继续使用额度回退。"
+}

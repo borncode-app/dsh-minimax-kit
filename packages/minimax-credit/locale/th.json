@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "title": "เครดิต MiniMax และโควตาหมด",
+    "description": "แสดงเครดิต MiniMax คงเหลือ (ตัวเลขเดียวกับที่ MiniMax Code แสดง) และทำให้ provider ทำงานต่อได้เมื่อโควตา Token Plan หมด"
+  },
+  "credit.title": "เครดิต MiniMax",
+  "credit.inUse": "เครดิต",
+  "credit.unavailable": "เครดิตใช้ไม่ได้",
+  "credit.remaining": "เครดิตคงเหลือ",
+  "credit.remainingShort": "เครดิต {value}",
+  "credit.purchased": "ซื้อเพิ่ม {value}",
+  "credit.free": "เครดิตแถม {value}",
+  "credit.planTier": "แพ็กเกจ: {tier}",
+  "credit.wallet": "เครดิตในกระเป๋า {value}",
+  "credit.fallbackOn": "เปิดใช้เครดิตต่อจากแพ็กเกจแล้วใน MiniMax",
+  "credit.fallbackOff": "ปิดการใช้เครดิตต่อจากแพ็กเกจใน MiniMax",
+  "credit.tooltip": "โควตาแพ็กเกจหมดแล้ว คำขอจะใช้เครดิต MiniMax ต่อ",
+  "credit.plan": "หน้าต่างแพ็กเกจ",
+  "credit.planRemaining": "เหลือ {percent}%",
+  "credit.planSpent": "หมดแล้ว",
+  "credit.resets": "รีเซ็ตใน",
+  "credit.weeklyPlan": "หน้าต่างสัปดาห์",
+  "credit.weeklyResets": "รีเซ็ตรายสัปดาห์ใน",
+  "credit.zero": "เครดิตคงเหลือ 0 — ถ้าแพ็กเกจหมดด้วย คำขอจะไม่ผ่านจนกว่าจะเติมเครดิต",
+  "credit.signIn": "เปิด MiniMax Code แล้วลงชื่อเข้าใช้อีกครั้ง เพื่อให้ใช้เครดิตต่อได้"
+}

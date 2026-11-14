@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "title": "MiniMax credits after quota",
+    "description": "Shows the account's remaining MiniMax credits (the same number MiniMax Code shows) and keeps the provider working after the Token Plan quota is spent."
+  },
+  "credit.title": "MiniMax credits",
+  "credit.inUse": "credits",
+  "credit.unavailable": "credits unavailable",
+  "credit.remaining": "Credits left",
+  "credit.remainingShort": "credits {value}",
+  "credit.purchased": "Purchased {value}",
+  "credit.free": "Free credits {value}",
+  "credit.planTier": "Plan: {tier}",
+  "credit.wallet": "Wallet credit {value}",
+  "credit.fallbackOn": "Credit fallback is on in MiniMax",
+  "credit.fallbackOff": "Credit fallback is off in MiniMax",
+  "credit.tooltip": "Plan quota is spent, so requests continue on MiniMax credits.",
+  "credit.plan": "Plan window",
+  "credit.planRemaining": "{percent}% left",
+  "credit.planSpent": "spent",
+  "credit.resets": "Resets in",
+  "credit.weeklyPlan": "Weekly window",
+  "credit.weeklyResets": "Weekly resets in",
+  "credit.zero": "No credit balance: if the plan is also spent, requests will fail until you top up.",
+  "credit.signIn": "Open MiniMax Code and sign in again to keep credit fallback working."
+}
