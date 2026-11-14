@@ -1,0 +1,17 @@
+{
+  "meta": {
+    "title": "MiniMax daily check-in",
+    "description": "Claims the MiniMax daily check-in reward from inside DeepSeek Harness. It reuses the sign-in MiniMax Code already stored on this machine, so MiniMax Code does not have to be open, and it can run the claim on a daily schedule."
+  },
+  "checkin.title": "MiniMax daily check-in",
+  "checkin.streak": "{value}-day streak this cycle",
+  "checkin.claim": "Check in for {value}",
+  "checkin.claimed": "Checked in today",
+  "checkin.upcoming": "Not claimable yet",
+  "checkin.unavailable": "Check-in unavailable",
+  "checkin.signIn": "Open MiniMax Code and sign in again so the daily check-in can run.",
+  "checkin.claiming": "Claiming…",
+  "checkin.failed": "The daily check-in failed: {message}",
+  "checkin.done": "Claimed {value} credits for day {day}.",
+  "checkin.already": "Today's reward was already claimed."
+}

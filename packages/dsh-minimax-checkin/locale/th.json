@@ -1,0 +1,17 @@
+{
+  "meta": {
+    "title": "เช็กอินประจำวันของ MiniMax",
+    "description": "กดรับรางวัลเช็กอินประจำวันของ MiniMax ได้จากใน DeepSeek Harness โดยใช้การเข้าสู่ระบบที่ MiniMax Code เก็บไว้ในเครื่องนี้อยู่แล้ว จึงไม่ต้องเปิด MiniMax Code และยังตั้งให้กดรับอัตโนมัติทุกวันได้"
+  },
+  "checkin.title": "เช็กอินประจำวันของ MiniMax",
+  "checkin.streak": "ต่อเนื่อง {value} วันในรอบนี้",
+  "checkin.claim": "เช็กอินรับ {value}",
+  "checkin.claimed": "เช็กอินวันนี้แล้ว",
+  "checkin.upcoming": "ยังรับไม่ได้",
+  "checkin.unavailable": "ใช้เช็กอินไม่ได้",
+  "checkin.signIn": "เปิด MiniMax Code แล้วลงชื่อเข้าใช้อีกครั้ง เพื่อให้เช็กอินประจำวันทำงานได้",
+  "checkin.claiming": "กำลังรับ…",
+  "checkin.failed": "เช็กอินประจำวันล้มเหลว: {message}",
+  "checkin.done": "รับเครดิต {value} สำหรับวันที่ {day} แล้ว",
+  "checkin.already": "รับของวันนี้ไปแล้ว"
+}

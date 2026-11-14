@@ -1,0 +1,60 @@
+{
+  "name": "@local/dsh-minimax-checkin",
+  "version": "1.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Claims the MiniMax daily check-in reward from inside DeepSeek Harness, using the sign-in MiniMax Code already stored on this machine.",
+  "author": "BornCode (https://github.com/borncode-app)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/borncode-app/dsh-minimax-checkin.git"
+  },
+  "homepage": "https://github.com/borncode-app/dsh-minimax-checkin#readme",
+  "bugs": {
+    "url": "https://github.com/borncode-app/dsh-minimax-checkin/issues"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "dsh-plugin",
+    "minimax",
+    "check-in",
+    "daily",
+    "credits"
+  ],
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "~3.19.0",
+    "@local/dsh-minimax-auth": "github:borncode-app/dsh-minimax-auth#b187c15ece564e1e7a81512d857853ee711eda79"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    }
+  }
+}

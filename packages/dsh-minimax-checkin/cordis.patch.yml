@@ -1,0 +1,23 @@
+# Claims the MiniMax daily check-in reward without opening MiniMax Code.
+#
+# The plugin borrows the OAuth grant MiniMax Code already wrote under
+# `~/.minimax/auth`, so no second sign-in is needed. `autoCheckIn` runs the
+# claim every day at `autoCheckInHour` local time; set it to false to claim
+# only on demand through the `minimax_daily_checkin` tool or the composer chip.
+- insert:
+    - id: minimax-checkin
+      name: '@local/dsh-minimax-checkin'
+      config:
+        enabled: true
+        minimaxHome: ''
+        buildEnv: prod
+        region: en
+        apiBaseURL: https://agent.minimax.io
+        oauthTokenURL: ''
+        appVersion: 3.1.14
+        refreshSkewMs: 600000
+        timeoutMs: 20000
+        statusPath: /plugins/minimax-checkin/status
+        claimPath: /plugins/minimax-checkin/claim
+        autoCheckIn: true
+        autoCheckInHour: 9

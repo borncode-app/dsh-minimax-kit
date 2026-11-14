@@ -1,0 +1,17 @@
+{
+  "meta": {
+    "title": "MiniMax 每日签到",
+    "description": "直接在 DeepSeek Harness 内领取 MiniMax 每日签到奖励。它复用本机 MiniMax Code 已保存的登录状态，无需打开 MiniMax Code，并可按天定时自动领取。"
+  },
+  "checkin.title": "MiniMax 每日签到",
+  "checkin.streak": "本轮已连续 {value} 天",
+  "checkin.claim": "签到领取 {value}",
+  "checkin.claimed": "今日已签到",
+  "checkin.upcoming": "暂不可领取",
+  "checkin.unavailable": "签到不可用",
+  "checkin.signIn": "请打开 MiniMax Code 重新登录，签到才能继续运行。",
+  "checkin.claiming": "领取中…",
+  "checkin.failed": "每日签到失败：{message}",
+  "checkin.done": "已为第 {day} 天领取 {value} 额度。",
+  "checkin.already": "今天的奖励已经领取过了。"
+}

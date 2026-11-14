@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Calendar with a check mark">
+  <rect x="8" y="14" width="48" height="44" rx="8" fill="none" stroke="#4f8ef7" stroke-width="4.5"/>
+  <path d="M8 26h48" fill="none" stroke="#4f8ef7" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M21 8v12M43 8v12" fill="none" stroke="#4f8ef7" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M20 40l7 7 16-16" fill="none" stroke="#35c98a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
