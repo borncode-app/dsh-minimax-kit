@@ -1,0 +1,36 @@
+{
+  "name": "@local/dsh-minimax-auth",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The MiniMax Code OAuth grant reader and refresher shared by dsh-minimax-credit and dsh-minimax-checkin.",
+  "author": "BornCode (https://github.com/borncode-app)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/borncode-app/dsh-minimax-auth.git"
+  },
+  "homepage": "https://github.com/borncode-app/dsh-minimax-auth#readme",
+  "bugs": {
+    "url": "https://github.com/borncode-app/dsh-minimax-auth/issues"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "dsh-plugin",
+    "minimax",
+    "oauth",
+    "auth",
+    "token"
+  ],
+  "exports": {
+    ".": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test"
+  }
+}
