@@ -1,15 +1,17 @@
-# One install entry for the four MiniMax bundles.
+# One install entry for the five MiniMax bundles.
 #
 # This bundle inserts the rows those bundles used to insert, naming the same
-# packages, so the credit proxy, the check-in chip, the model-list sync and the
-# MiniMax Code bridge keep their own code and stay separate rows: one crashing
-# row does not take the others down, and each keeps its own Config schema.
+# packages, so the credit proxy, the check-in chip, the model-list sync, the
+# composer quota chip and the MiniMax Code bridge keep their own code and stay
+# separate rows: one crashing row does not take the others down, and each keeps
+# its own Config schema.
 #
-# Deselect the four bundles ("@local/dsh-minimax-credit", "@local/dsh-minimax-bridge",
-# "@local/dsh-minimax-model-sync", "@local/dsh-minimax-checkin") while this one is
-# selected, or their rows appear twice. Keep them installed as profile
-# dependencies: the rows below resolve their packages from the profile, not from
-# this bundle, so removing a package leaves its row unable to start.
+# Deselect the five bundles ("@local/dsh-minimax-credit", "@local/dsh-minimax-bridge",
+# "@local/dsh-minimax-model-sync", "@local/dsh-minimax-checkin",
+# "@local/dsh-model-quota") while this one is selected, or their rows appear
+# twice. Keep them installed as profile dependencies: the rows below resolve
+# their packages from the profile, not from this bundle, so removing a package
+# leaves its row unable to start.
 - insert:
     # Local Anthropic-Messages proxy and credit failover. Point an llm-pi-ai
     # route's baseURL at http://127.0.0.1:45677/anthropic.

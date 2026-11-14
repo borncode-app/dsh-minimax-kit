@@ -6,7 +6,7 @@ One Plugins entry for the five MiniMax bundles, without merging their code.
 |---|---|
 | the credit proxy (port 45677), the check-in claim, the model-list sync, the MiniMax Code bridge, the quota chip | one crashing row does not take the others down |
 | one Config schema per row | the Plugins settings form stays short, and a bad field blocks only its own row |
-| four upstream repositories | `git pull` keeps working on each of them |
+| five upstream repositories | `git pull` keeps working on each of them |
 
 ## What it inserts
 
