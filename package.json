@@ -1,41 +1,49 @@
 {
-  "name": "@local/dsh-minimax-kit",
-  "version": "1.0.0",
-  "private": true,
-  "type": "module",
-  "description": "Installs the five MiniMax bundles as one entry: credits and failover, the daily check-in, model-list sync, the composer quota chip, and the MiniMax Code bridge.",
-  "author": "BornCode (https://github.com/borncode-app)",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/borncode-app/dsh-minimax-kit.git"
-  },
-  "homepage": "https://github.com/borncode-app/dsh-minimax-kit#readme",
-  "bugs": {
-    "url": "https://github.com/borncode-app/dsh-minimax-kit/issues"
-  },
-  "keywords": [
-    "dsh",
-    "deepseek-harness",
-    "dsh-plugin",
-    "minimax",
-    "kit"
-  ],
-  "exports": {
-    "./locale/*.json": "./locale/*.json",
-    "./icon": "./icon.svg"
-  },
-  "files": [
-    "cordis.patch.yml",
-    "locale/*.json",
-    "docs",
-    "icon.svg",
-    "README.md",
-    "packages"
-  ],
-  "dsh": {
-    "bundle": {
-      "patch": "./cordis.patch.yml"
-    }
-  }
+    "name":  "@local/dsh-minimax-kit",
+    "version":  "1.0.0",
+    "private":  true,
+    "type":  "module",
+    "description":  "Installs the five MiniMax bundles as one entry: credits and failover, the daily check-in, model-list sync, the composer quota chip, and the MiniMax Code bridge.",
+    "author":  "BornCode (https://github.com/borncode-app)",
+    "license":  "MIT",
+    "repository":  {
+                       "type":  "git",
+                       "url":  "https://github.com/borncode-app/dsh-minimax-kit.git"
+                   },
+    "homepage":  "https://github.com/borncode-app/dsh-minimax-kit#readme",
+    "bugs":  {
+                 "url":  "https://github.com/borncode-app/dsh-minimax-kit/issues"
+             },
+    "keywords":  [
+                     "dsh",
+                     "deepseek-harness",
+                     "dsh-plugin",
+                     "minimax",
+                     "kit"
+                 ],
+    "exports":  {
+                    "./locale/*.json":  "./locale/*.json",
+                    "./icon":  "./icon.svg"
+                },
+    "files":  [
+                  "cordis.patch.yml",
+                  "locale/*.json",
+                  "docs",
+                  "icon.svg",
+                  "README.md",
+                  "packages"
+              ],
+    "dsh":  {
+                "bundle":  {
+                               "patch":  "./cordis.patch.yml"
+                           }
+            },
+    "dependencies":  {
+                         "@local/dsh-minimax-auth":  "link:./packages/dsh-minimax-auth",
+                         "@local/dsh-minimax-bridge":  "link:./packages/dsh-minimax-bridge",
+                         "@local/dsh-minimax-checkin":  "link:./packages/dsh-minimax-checkin",
+                         "@local/dsh-minimax-credit":  "link:./packages/dsh-minimax-credit",
+                         "@local/dsh-minimax-model-sync":  "link:./packages/dsh-minimax-model-sync",
+                         "@local/dsh-model-quota":  "link:./packages/dsh-model-quota"
+                     }
 }

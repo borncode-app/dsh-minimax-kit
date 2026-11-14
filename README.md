@@ -1,7 +1,7 @@
 # dsh-minimax-kit
 
 The whole MiniMax set for DeepSeek Harness, in **one repository** and **one
-Plugins entry**. Installing this bundle is enough — it carries its own packages.
+Plugins entry**. Installing this bundle is enough Ã¢â‚¬â€ it carries its own packages.
 
 The five parts keep their own code, their own Config schema, and their own
 switch. Only the repository is shared.
@@ -54,7 +54,7 @@ two.
 
 When Our Free Model drives the MiniMax Code channel, that grant is the account
 the quota, credit, and check-in endpoints answer for. It is read as it stands
-and never refreshed here — Our Free Model owns the refresh cycle for its own
+and never refreshed here Ã¢â‚¬â€ Our Free Model owns the refresh cycle for its own
 channel, and a second refresher would rotate the refresh token out from under
 it.
 
@@ -68,11 +68,12 @@ Turn `preferOfmGrant` off to read the API key first.
 ## Install
 
 1. Install this bundle.
-2. Nothing else. The bundle carries its packages, and the rows resolve them
-   from beside the patch.
+2. Nothing else. The bundle carries its packages as dependencies, so each
+   row resolves by the package's own name and keeps its title, icon, and
+   Config schema.
 
 If the five standalone packages are also installed, turn them off in
-**Plugins** — otherwise their rows appear twice.
+**Plugins** Ã¢â‚¬â€ otherwise their rows appear twice.
 
 ## Develop
 
@@ -100,7 +101,7 @@ the `baseURL` the profile's `llm-pi-ai` `minimax-api` route must name.
 
 Individual rows stay addressable. In **Plugins**, disable the row you do not want
 for example `minimax-checkin` for a week away, or `minimax-model-sync` when you
-hand-manage the model list — and the rest keep running.
+hand-manage the model list Ã¢â‚¬â€ and the rest keep running.
 
 ## Limitations
 
@@ -115,4 +116,4 @@ hand-manage the model list — and the rest keep running.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT Ã¢â‚¬â€ see [LICENSE](LICENSE).

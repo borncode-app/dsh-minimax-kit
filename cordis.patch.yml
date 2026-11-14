@@ -21,7 +21,7 @@
     # drives the MiniMax Code channel, its grant is the account the quota and
     # credit endpoints answer for.
     - id: minimax-credit
-      name: './packages/dsh-minimax-credit/index.js'
+      name: '@local/dsh-minimax-credit'
       config:
         enabled: true
         listenHost: 127.0.0.1
@@ -45,7 +45,7 @@
 
     # Daily check-in claim plus the composer chip and the minimax_daily_checkin tool.
     - id: minimax-checkin
-      name: './packages/dsh-minimax-checkin/index.js'
+      name: '@local/dsh-minimax-checkin'
       config:
         enabled: true
         minimaxHome: ''
@@ -63,7 +63,7 @@
 
     # Keeps the llm-pi-ai minimax-api route's model list current.
     - id: minimax-model-sync
-      name: './packages/dsh-minimax-model-sync/index.js'
+      name: '@local/dsh-minimax-model-sync'
       config:
         settingsNs: llm-pi-ai
         route: minimax-api
@@ -89,7 +89,7 @@
     # reads the grant Our Free Model stores. `minimax-api` is the Token Plan
     # route and prefers that grant too, falling back to the API key.
     - id: model-quota
-      name: './packages/dsh-model-quota/index.js'
+      name: '@local/dsh-model-quota'
       config:
         endpoint: /plugins/model-quota
         cacheSeconds: 60
@@ -127,7 +127,7 @@
 
     # Serves the skills that live under the MiniMax Code home, in place.
     - id: minimax-bridge
-      name: './packages/dsh-minimax-bridge/index.js'
+      name: '@local/dsh-minimax-bridge'
       config:
         minimaxHome: ''
         includeUserSkills: true
@@ -138,7 +138,7 @@
 
     # Publishes the same home's agents as Harness agent presets.
     - id: minimax-agent-bridge
-      name: './packages/dsh-minimax-bridge/agents.js'
+      name: '@local/dsh-minimax-bridge/agents'
       config:
         minimaxHome: ''
         mode: coding

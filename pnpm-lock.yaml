@@ -6,7 +6,26 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    dependencies:
+      '@local/dsh-minimax-auth':
+        specifier: link:./packages/dsh-minimax-auth
+        version: link:packages/dsh-minimax-auth
+      '@local/dsh-minimax-bridge':
+        specifier: link:./packages/dsh-minimax-bridge
+        version: link:packages/dsh-minimax-bridge
+      '@local/dsh-minimax-checkin':
+        specifier: link:./packages/dsh-minimax-checkin
+        version: link:packages/dsh-minimax-checkin
+      '@local/dsh-minimax-credit':
+        specifier: link:./packages/dsh-minimax-credit
+        version: link:packages/dsh-minimax-credit
+      '@local/dsh-minimax-model-sync':
+        specifier: link:./packages/dsh-minimax-model-sync
+        version: link:packages/dsh-minimax-model-sync
+      '@local/dsh-model-quota':
+        specifier: link:./packages/dsh-model-quota
+        version: link:packages/dsh-model-quota
 
   packages/dsh-minimax-auth: {}
 
