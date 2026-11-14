@@ -1,0 +1,182 @@
+# One install entry for the four MiniMax bundles.
+#
+# This bundle inserts the rows those bundles used to insert, naming the same
+# packages, so the credit proxy, the check-in chip, the model-list sync and the
+# MiniMax Code bridge keep their own code and stay separate rows: one crashing
+# row does not take the others down, and each keeps its own Config schema.
+#
+# Deselect the four bundles ("@local/dsh-minimax-credit", "@local/dsh-minimax-bridge",
+# "@local/dsh-minimax-model-sync", "@local/dsh-minimax-checkin") while this one is
+# selected, or their rows appear twice. Keep them installed as profile
+# dependencies: the rows below resolve their packages from the profile, not from
+# this bundle, so removing a package leaves its row unable to start.
+- insert:
+    # Local Anthropic-Messages proxy and credit failover. Point an llm-pi-ai
+    # route's baseURL at http://127.0.0.1:45677/anthropic.
+    - id: minimax-credit
+      name: '@local/dsh-minimax-credit'
+      config:
+        enabled: true
+        listenHost: 127.0.0.1
+        listenPort: 45677
+        minimaxHome: ''
+        buildEnv: prod
+        region: en
+        planBaseURL: https://api.minimax.io/anthropic
+        creditBaseURL: https://agent.minimax.io/mavis/api/v1/llm/v1
+        quotaURL: https://api.minimax.io/v1/api/openplatform/coding_plan/remains
+        creditURL: https://api.minimax.io/backend/account/token_plan_credit
+        membershipURL: https://agent.minimax.io/matrix/api/v1/commerce/get_membership_info
+        walletURL: https://api.minimax.io/account/query_balance
+        apiKeyEnv: MINIMAX_API_KEY
+        quotaCacheMs: 60000
+        creditsCacheMs: 60000
+        refreshSkewMs: 600000
+
+    # Daily check-in claim plus the composer chip and the minimax_daily_checkin tool.
+    - id: minimax-checkin
+      name: '@local/dsh-minimax-checkin'
+      config:
+        enabled: true
+        minimaxHome: ''
+        buildEnv: prod
+        region: en
+        apiBaseURL: https://agent.minimax.io
+        oauthTokenURL: ''
+        appVersion: 3.1.14
+        refreshSkewMs: 600000
+        timeoutMs: 20000
+        statusPath: /plugins/minimax-checkin/status
+        claimPath: /plugins/minimax-checkin/claim
+        autoCheckIn: true
+        autoCheckInHour: 9
+
+    # Keeps the llm-pi-ai minimax-api route's model list current.
+    - id: minimax-model-sync
+      name: '@local/dsh-minimax-model-sync'
+      config:
+        settingsNs: llm-pi-ai
+        route: minimax-api
+        baseURL: https://api.minimax.io/anthropic
+        api: anthropic-messages
+        exclude:
+          - MiniMax-M2
+          - MiniMax-M2.1
+          - MiniMax-M2.1-highspeed
+          - MiniMax-M2.5
+          - MiniMax-M2.5-highspeed
+          - MiniMax-M2.7
+          - MiniMax-M2.7-highspeed
+        refreshMinutes: 360
+
+    # The composer chip under the input: remaining quota or balance for the
+    # selected model's provider. Only `minimax-api` reports numbers for a MiniMax
+    # model; the other three entries are kept so the chip follows a model switch
+    # instead of disappearing. This probe shares its endpoint with the credit
+    # proxy above, which is why both live in one bundle.
+    - id: model-quota
+      name: '@local/dsh-model-quota'
+      config:
+        endpoint: /plugins/model-quota
+        cacheSeconds: 60
+        providers:
+          minimax-api:
+            kind: minimax-coding-plan
+            baseURL: https://api.minimax.io
+            apiKeyEnv: MINIMAX_API_KEY
+          deepseek-account:
+            kind: deepseek-account-balance
+            baseURL: https://platform.deepseek.com
+            credentialRecord: deepseek-account-platform/default
+          deepseek-official:
+            kind: deepseek-api-balance
+            baseURL: https://api.deepseek.com
+            apiKeyEnv: DEEPSEEK_API_KEY
+          anthropic:
+            kind: claude-oauth-usage
+            baseURL: https://api.anthropic.com
+            apiKeyEnv: ANTHROPIC_OAUTH_TOKEN
+            apiKeyEnvs:
+              - ANTHROPIC_API_KEY
+              - ANTHROPIC_AUTH_TOKEN
+            probeModel: claude-haiku-4-5
+            cacheSeconds: 300
+
+    # Serves the skills that live under the MiniMax Code home, in place.
+    - id: minimax-bridge
+      name: '@local/dsh-minimax-bridge'
+      config:
+        minimaxHome: ''
+        includeUserSkills: true
+        includePluginSkills: true
+        includeAgentSkills: true
+        extraSkillDirs: []
+        watch: true
+
+    # Publishes the same home's agents as Harness agent presets.
+    - id: minimax-agent-bridge
+      name: '@local/dsh-minimax-bridge/agents'
+      config:
+        minimaxHome: ''
+        mode: coding
+        includeBuiltin: true
+        includeUserAgents: true
+        stripSections:
+          - Harness
+          - Media Output
+        watch: true
+        maxPersonaChars: 60000
+
+    # MiniMax Code's MCP servers. They stay disabled: rea publishes 229 tools and
+    # mcp-reverse 111, which every request would pay for. Enable the ones you want.
+    - id: minimax-mcp-rea
+      name: '@deepseek-ai/dsh-mcp-client'
+      disabled: true
+      config:
+        serverName: rea
+        transport: stdio
+        command: 'C:\Program Files\nodejs\node.exe'
+        args:
+          - 'C:\Users\snowb4ll\AppData\Roaming\npm\node_modules\rea-agents\scripts\rea.mjs'
+          - 'mcp'
+        env:
+          GHIDRA_INSTALL_DIR: 'C:\ProgramData\Ghidra\ghidra_12.1.4_PUBLIC'
+          JAVA_HOME: 'C:\Program Files\Android\Android Studio\jbr'
+          REA_WABT_BIN_DIRECTORY: 'C:\ProgramData\wabt\wabt-1.0.42\bin'
+          REA_JADX_MCP_JAR: 'C:\ProgramData\jadx\jadx-headless-mcp-0.7.1-all.jar'
+          REA_APKTOOL_COMMAND: 'C:\Users\snowb4ll\Tools\apktool\apktool.bat'
+          REA_BROWSER_EXECUTABLE: 'C:\Program Files\Google\Chrome\Application\chrome.exe'
+          REA_TSHARK_COMMAND: 'C:\Program Files\Wireshark\tshark.exe'
+          REA_CAPINFOS_COMMAND: 'C:\Program Files\Wireshark\capinfos.exe'
+          REA_KUNA_COMMAND: 'C:\ProgramData\kuna\kuna-v1.833-windows-x86_64\kuna.exe'
+          REA_IDA_MCP_CONFIG: 'C:\ProgramData\ida\ida-mcp.json'
+          REA_RIZIN_COMMAND: 'C:\Program Files\Rizin\bin\rizin.exe'
+          REA_OBJDUMP_COMMAND: 'C:\Users\snowb4ll\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\objdump.exe'
+        toolCallTimeoutMs: 600000
+
+    - id: minimax-mcp-photocraft
+      name: '@deepseek-ai/dsh-mcp-client'
+      disabled: true
+      config:
+        serverName: photocraft
+        transport: stdio
+        command: 'C:\Users\snowb4ll\Apps\photocraft\photocraft-0.16.0-windows-x64-portable\photocraft-cli.exe'
+        args:
+          - mcp
+          - '--bridge'
+          - 127.0.0.1:17890
+          - '--control-token-file'
+          - 'C:\Users\snowb4ll\Apps\photocraft\control-token.txt'
+
+    - id: minimax-mcp-reverse
+      name: '@deepseek-ai/dsh-mcp-client'
+      disabled: true
+      config:
+        serverName: mcp-reverse
+        transport: stdio
+        command: 'C:\Program Files\nodejs\node.exe'
+        args:
+          - 'C:\Users\snowb4ll\Tools\mcp-reverse\dist\index.js'
+        env:
+          MCP_SKILLS_DB: 'C:\Users\snowb4ll\Tools\mcp-reverse\db\skills-full.db'
+        toolCallTimeoutMs: 600000
