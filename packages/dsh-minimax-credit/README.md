@@ -12,32 +12,27 @@
 
 ---
 
-## Where the one-entry kit lives
+## Where this code lives now
 
-This plugin, `dsh-minimax-checkin`, `dsh-minimax-model-sync`, `dsh-model-quota`
-and `dsh-minimax-bridge` are also published as one bundle:
-**[`dsh-minimax-kit`](https://github.com/borncode-app/dsh-minimax-kit)**.
+This plugin lives in **`dsh-minimax-kit`**, at `packages/dsh-minimax-credit`:
+[**github.com/borncode-app/dsh-minimax-kit**](https://github.com/borncode-app/dsh-minimax-kit).
 
-Install the kit instead if you want the whole MiniMax set from a single
-**Plugins** entry. It ships these same packages as separate rows, so the code
-here is unchanged and each part keeps its own switch — this repository stays
-the home of the proxy, the quota probe, the credit and wallet reads, and the
-composer chip.
-
-## Where the sign-in code lives now
+The whole MiniMax set — the credit proxy, the check-in claim, the model-list
+sync, the composer quota chip, the MiniMax Code bridge, and the shared grant
+reader — is one repository with one install entry. Each part keeps its own
+package, its own Config schema, and its own switch; only the repository is
+shared. This package still owns the proxy, the quota probe, the credit and
+wallet reads, and the composer chip.
 
 The MiniMax Code grant reader — reading `~/.minimax/auth`, refreshing it under
-the app's own `auth.lock`, and the token/generation bookkeeping — moved to
-**[`dsh-minimax-auth`](https://github.com/borncode-app/dsh-minimax-auth)**.
+the app's own `auth.lock`, and the token/generation bookkeeping — lives next
+door at `packages/dsh-minimax-auth`. This plugin and `dsh-minimax-checkin`
+both import it, so one refresh path writes the grant instead of two. The
+dependency is a workspace link (`workspace:*`); bump the auth package's
+version to roll it forward.
 
-This plugin and `dsh-minimax-checkin` both import it, so one refresh path writes
-the grant instead of two. The dependency is pinned to a commit; bump
-`@local/dsh-minimax-auth` in `package.json` to take a newer one.
-
-Nothing else moved: this repository still owns the proxy, the quota probe, the
-credit and wallet reads, and the composer chip. The `TokenSource` export remains
-here as a subclass that supplies this plugin's error class and
-`MINIMAX_CREDIT_*` codes.
+The `TokenSource` export remains here as a subclass that supplies this
+plugin's error class and `MINIMAX_CREDIT_*` codes.
 
 ## The problem
 

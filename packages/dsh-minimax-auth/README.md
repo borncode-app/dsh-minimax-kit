@@ -4,6 +4,9 @@ The MiniMax Code OAuth grant reader and refresher, shared by
 [`dsh-minimax-credit`](../dsh-minimax-credit) and
 [`dsh-minimax-checkin`](../dsh-minimax-checkin).
 
+It lives in the **`dsh-minimax-kit`** repository, at `packages/dsh-minimax-auth`:
+[**github.com/borncode-app/dsh-minimax-kit**](https://github.com/borncode-app/dsh-minimax-kit).
+
 Not a bundle: it declares no `dsh.bundle.patch` and inserts no Loader row. It is
 a plain library the two plugins import.
 

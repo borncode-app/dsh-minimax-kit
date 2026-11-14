@@ -6,7 +6,11 @@ settings:
 
 importers:
 
-  .:
+  .: {}
+
+  packages/dsh-minimax-auth: {}
+
+  packages/dsh-minimax-bridge:
     dependencies:
       '@deepseek-ai/schemastery':
         specifier: ~3.19.0
@@ -14,6 +18,36 @@ importers:
       yaml:
         specifier: ^2.8.1
         version: 2.9.1
+
+  packages/dsh-minimax-checkin:
+    dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: ~3.19.0
+        version: 3.19.0
+      '@local/dsh-minimax-auth':
+        specifier: link:../dsh-minimax-auth
+        version: link:../dsh-minimax-auth
+
+  packages/dsh-minimax-credit:
+    dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: ~3.19.0
+        version: 3.19.0
+      '@local/dsh-minimax-auth':
+        specifier: link:../dsh-minimax-auth
+        version: link:../dsh-minimax-auth
+
+  packages/dsh-minimax-model-sync:
+    dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: ~3.19.0
+        version: 3.19.0
+
+  packages/dsh-model-quota:
+    dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: ~3.19.0
+        version: 3.19.0
 
 packages:
 

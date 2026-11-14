@@ -1,12 +1,34 @@
 # dsh-minimax-kit
 
-One Plugins entry for the five MiniMax bundles, without merging their code.
+The whole MiniMax set for DeepSeek Harness, in **one repository** and **one
+Plugins entry**.
+
+The five parts keep their own code, their own Config schema, and their own
+switch. Only the repository is shared.
 
 | what stays separate | why |
 |---|---|
 | the credit proxy (port 45677), the check-in claim, the model-list sync, the MiniMax Code bridge, the quota chip | one crashing row does not take the others down |
 | one Config schema per row | the Plugins settings form stays short, and a bad field blocks only its own row |
-| five upstream repositories | `git pull` keeps working on each of them |
+| one package per row | `git pull` and a code review stay scoped to the part you touched |
+
+## Layout
+
+```
+dsh-minimax-kit/            the bundle: cordis.patch.yml, locale, docs, icon
+packages/
+  dsh-minimax-auth/         shared grant reader (a library, not a row)
+  dsh-minimax-credit/       the proxy, the quota probe, the composer chip
+  dsh-minimax-checkin/      the daily claim, the panel, the tool, the routes
+  dsh-minimax-model-sync/   the route's model list
+  dsh-model-quota/          the composer quota chip (four provider probes)
+  dsh-minimax-bridge/       the skills bridge and the agent presets
+```
+
+`packages/dsh-minimax-auth` is a plain library: it declares no
+`dsh.bundle.patch` and inserts no Loader row. `dsh-minimax-credit` and
+`dsh-minimax-checkin` import it through a `workspace:*` link, so one refresh
+path writes the MiniMax Code grant instead of two.
 
 ## What it inserts
 
@@ -23,7 +45,7 @@ One Plugins entry for the five MiniMax bundles, without merging their code.
 ## Install
 
 The five packages must stay installed in the profile, because the rows resolve
-them from there; this bundle ships no code of its own.
+them from there; this bundle ships no plugin code of its own.
 
 1. Install this bundle.
 2. In **Plugins**, turn off `@local/dsh-minimax-credit`, `@local/dsh-minimax-bridge`,
@@ -31,6 +53,18 @@ them from there; this bundle ships no code of its own.
 
 Turning those off deselects their layers and keeps their dependencies, so the rows
 above still start. Leaving them on registers every row twice.
+
+## Develop
+
+```bash
+pnpm install          # links the workspace packages
+pnpm -r test          # auth 7, checkin 10, credit 15, bridge render
+```
+
+Each package keeps its own suite: `node --test` in `packages/dsh-minimax-auth`
+and `packages/dsh-minimax-checkin`, `node test-proxy.mjs` in
+`packages/dsh-minimax-credit`, `node test-render.mjs` in
+`packages/dsh-minimax-bridge`.
 
 ## Configure once
 
@@ -57,3 +91,7 @@ hand-manage the model list — and the rest keep running.
 - The three MCP rows carry absolute Windows paths from the machine this bundle was
   written on; edit them for another machine. `rea` publishes 229 tools and
   `mcp-reverse` 111, which is why they ship disabled.
+
+## License
+
+MIT — see [LICENSE](LICENSE).

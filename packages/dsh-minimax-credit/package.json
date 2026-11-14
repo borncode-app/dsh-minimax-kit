@@ -1,0 +1,57 @@
+{
+    "name":  "@local/dsh-minimax-credit",
+    "version":  "1.2.0",
+    "private":  true,
+    "type":  "module",
+    "description":  "Shows the account\u0027s remaining MiniMax credits and keeps the MiniMax provider working after the Token Plan quota is spent.",
+    "author":  "BornCode (https://github.com/borncode-app)",
+    "license":  "MIT",
+    "repository":  {
+                       "type":  "git",
+                       "url":  "https://github.com/borncode-app/dsh-minimax-kit.git"
+                   },
+    "homepage":  "https://github.com/borncode-app/dsh-minimax-kit#readme",
+    "bugs":  {
+                 "url":  "https://github.com/borncode-app/dsh-minimax-kit/issues"
+             },
+    "keywords":  [
+                     "dsh",
+                     "deepseek-harness",
+                     "dsh-plugin",
+                     "minimax",
+                     "proxy",
+                     "credits",
+                     "quota",
+                     "anthropic-messages"
+                 ],
+    "exports":  {
+                    ".":  "./index.js",
+                    "./client":  "./client.js",
+                    "./locale/*.json":  "./locale/*.json",
+                    "./icon":  "./icon.svg"
+                },
+    "files":  [
+                  "index.js",
+                  "client.js",
+                  "cordis.patch.yml",
+                  "locale/*.json",
+                  "icon.svg",
+                  "README.md"
+              ],
+    "dependencies":  {
+                         "@deepseek-ai/schemastery":  "~3.19.0",
+                         "@local/dsh-minimax-auth":  "link:../dsh-minimax-auth"
+                     },
+    "dsh":  {
+                "bundle":  {
+                               "patch":  "./cordis.patch.yml"
+                           },
+                "client":  {
+                               "platform":  "web",
+                               "immediately":  true,
+                               "inject":  [
+                                              "@deepseek-ai/dsh-client-ui-conversation"
+                                          ]
+                           }
+            }
+}

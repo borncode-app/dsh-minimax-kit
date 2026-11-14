@@ -12,14 +12,20 @@
 
 ---
 
-## Where the MiniMax kit ships it
+## Where this code lives now
 
-This plugin is provider-agnostic — it stays installable on its own, and it
-supports DeepSeek and Claude providers too. It is also published inside
-**[`dsh-minimax-kit`](https://github.com/borncode-app/dsh-minimax-kit)**,
-because its `minimax-coding-plan` probe reads the same endpoint as the credit
-proxy. Install the kit if you want the whole MiniMax set from a single
-**Plugins** entry; the code here is unchanged.
+This plugin lives in **`dsh-minimax-kit`**, at `packages/dsh-model-quota`:
+[**github.com/borncode-app/dsh-minimax-kit**](https://github.com/borncode-app/dsh-minimax-kit).
+
+The whole MiniMax set — the credit proxy, the check-in claim, the model-list
+sync, the composer quota chip, the MiniMax Code bridge, and the shared grant
+reader — is one repository with one install entry. Each part keeps its own
+package, its own Config schema, and its own switch; only the repository is
+shared.
+
+This package stays provider-agnostic — it supports DeepSeek and Claude
+providers too, and its `minimax-coding-plan` probe reads the same endpoint as
+the credit proxy.
 
 ## What it does
 

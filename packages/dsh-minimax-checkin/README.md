@@ -12,26 +12,24 @@
 
 ---
 
-## Where the one-entry kit lives
+## Where this code lives now
 
-This plugin, `dsh-minimax-credit`, `dsh-minimax-model-sync`, `dsh-model-quota`
-and `dsh-minimax-bridge` are also published as one bundle:
-**[`dsh-minimax-kit`](https://github.com/borncode-app/dsh-minimax-kit)**.
+This plugin lives in **`dsh-minimax-kit`**, at `packages/dsh-minimax-checkin`:
+[**github.com/borncode-app/dsh-minimax-kit**](https://github.com/borncode-app/dsh-minimax-kit).
 
-Install the kit instead if you want the whole MiniMax set from a single
-**Plugins** entry. It ships these same packages as separate rows, so the code
-here is unchanged and each part keeps its own switch — this repository stays
-the home of the check-in client, the panel, the tool, and the routes.
-
-## Where the sign-in code lives now
+The whole MiniMax set — the credit proxy, the check-in claim, the model-list
+sync, the composer quota chip, the MiniMax Code bridge, and the shared grant
+reader — is one repository with one install entry. Each part keeps its own
+package, its own Config schema, and its own switch; only the repository is
+shared. This package still owns the check-in client, the panel, the tool, and
+the routes.
 
 The MiniMax Code grant reader — reading `~/.minimax/auth`, refreshing it under
-the app's own `auth.lock`, and the token/generation bookkeeping — moved to
-**[`dsh-minimax-auth`](https://github.com/borncode-app/dsh-minimax-auth)**.
-
-This plugin and `dsh-minimax-credit` both import it, so one refresh path writes
-the grant instead of two. The dependency is pinned to a commit; bump
-`@local/dsh-minimax-auth` in `package.json` to take a newer one.
+the app's own `auth.lock`, and the token/generation bookkeeping — lives next
+door at `packages/dsh-minimax-auth`. This plugin and `dsh-minimax-credit`
+both import it, so one refresh path writes the grant instead of two. The
+dependency is a workspace link (`workspace:*`); bump the auth package's
+version to roll it forward.
 
 Nothing else moved: this repository still owns the check-in client, the request
 signature, the panel, the tool, the routes, and the schedule. The `MinimaxAuth`
