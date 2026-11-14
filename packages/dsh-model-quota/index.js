@@ -11,7 +11,7 @@ const DEEPSEEK_BALANCE_PATH = '/user/balance'
 const CLAUDE_USAGE_PATH = '/api/oauth/usage'
 
 /** Kinds of quota source this plugin knows how to read. */
-const KINDS = ['minimax-coding-plan', 'deepseek-account-balance', 'deepseek-api-balance', 'claude-oauth-usage']
+const KINDS = ['minimax-coding-plan', 'deepseek-account-balance', 'deepseek-api-balance', 'claude-oauth-usage', 'ofm-gateway']
 
 export const Config = z.object({
   /** Path the Web GUI polls for the current snapshot. */
@@ -46,6 +46,16 @@ export const Config = z.object({
     probeModel: z.string(),
     /** Seconds this source's snapshot stays fresh; defaults to the plugin's cacheSeconds. */
     cacheSeconds: z.number(),
+    /**
+     * `ofm-gateway` only: the Our Free Model engine's local gateway. Empty means
+     * discover it beside Our Free Model's `owner.lock` lease.
+     */
+    gatewayURL: z.string().default(''),
+    /**
+     * `ofm-gateway` only: the entry of this dictionary that reads a MiniMax
+     * model's quota when the model is served through Our Free Model.
+     */
+    minimaxFallback: z.string().default('minimax-api'),
   })).default({}),
 })
 
@@ -417,6 +427,104 @@ export function apply(ctx, config) {
     }
   }
 
+  /** The Our Free Model gateway address found last, reused until it stops answering. */
+  let ofmGatewayURL
+
+  /** True when the address answers like Our Free Model's engine gateway. */
+  const isOfmGateway = async (base) => {
+    try {
+      const response = await fetch(`${base}/v1/models`, { redirect: 'error', signal: AbortSignal.timeout(1500) })
+      if (!response.ok) return false
+      const body = await response.json()
+      return Array.isArray(body?.data) && body.data.some(row => typeof row?.id === 'string' && row.id.includes('/'))
+    } catch {
+      return false
+    }
+  }
+
+  /**
+   * Find the Our Free Model engine's gateway without touching its code.
+   *
+   * Our Free Model writes its lease port to `<home>/our-free-model/magpie/owner.lock`
+   * and starts the engine's gateway on a neighbouring loopback port, so the
+   * addresses next to the lease are tried in turn.
+   */
+  const ofmGateway = async (spec) => {
+    if (typeof spec.gatewayURL === 'string' && spec.gatewayURL.length > 0) return spec.gatewayURL.replace(/\/+$/u, '')
+    if (ofmGatewayURL !== undefined && await isOfmGateway(ofmGatewayURL)) return ofmGatewayURL
+    ofmGatewayURL = undefined
+    let lease
+    try {
+      const { readFile } = await import('node:fs/promises')
+      const { join } = await import('node:path')
+      const { resolveDshHome } = await import('@local/dsh-minimax-auth/ofm-auth')
+      const home = spec.ofmHome !== undefined && spec.ofmHome.length > 0 ? spec.ofmHome : resolveDshHome()
+      lease = JSON.parse(await readFile(join(home, 'our-free-model', 'magpie', 'owner.lock'), 'utf8'))
+    } catch {
+      return undefined
+    }
+    const port = numberOf(lease?.port)
+    if (port === undefined) return undefined
+    for (const offset of [1, -1, 2, -2, 3, -3, 4, 0]) {
+      const base = `http://127.0.0.1:${String(port + offset)}`
+      if (await isOfmGateway(base)) {
+        ofmGatewayURL = base
+        return base
+      }
+    }
+    return undefined
+  }
+
+  /**
+   * A model served through Our Free Model: Claude reads its plan windows from
+   * the rate-limit headers the gateway passes through on a one-token message;
+   * MiniMax reads the plan quota with the API key named by `minimaxFallback`.
+   */
+  const ofmGatewayQuota = async (spec, selected) => {
+    const model = String(selected.model ?? '')
+    const hit = /^(?:subscription:magpie\/)?([^/]+)\/(.+)$/u.exec(model)
+    const channel = (hit?.[1] ?? '').toLowerCase()
+    if (channel === 'minimax' || channel.startsWith('minimax')) {
+      const fallback = sources()[spec.minimaxFallback ?? 'minimax-api']
+      if (fallback === undefined || fallback.kind !== 'minimax-coding-plan') return { ok: false, reason: 'missing-credential', credential: spec.minimaxFallback }
+      return await minimaxQuota(fallback)
+    }
+    if (channel !== 'claude') return { ok: false, reason: 'unsupported-model', message: model }
+    const base = await ofmGateway(spec)
+    if (base === undefined) return { ok: false, reason: 'gateway-not-found' }
+    let target = `claude/${hit[2]}`
+    if (typeof spec.probeModel === 'string' && spec.probeModel.length > 0) target = spec.probeModel
+    let response
+    try {
+      response = await fetch(`${base}/v1/messages`, {
+        method: 'POST',
+        redirect: 'error',
+        headers: { accept: 'application/json', 'content-type': 'application/json', 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({ model: target, max_tokens: 1, messages: [{ role: 'user', content: 'hi' }] }),
+        signal: AbortSignal.timeout(Math.max(timeoutMs(), 30000)),
+      })
+    } catch (error) {
+      ofmGatewayURL = undefined
+      return { ok: false, reason: 'request-failed', message: `Our Free Model gateway: ${error instanceof Error ? error.message : String(error)}` }
+    }
+    const header = (name) => response.headers.get(name) ?? undefined
+    await response.body?.cancel()
+    const reading = (prefix) => {
+      const used = utilizationPercent(Number.parseFloat(header(`anthropic-ratelimit-unified-${prefix}-utilization`) ?? ''))
+      const reset = Number.parseFloat(header(`anthropic-ratelimit-unified-${prefix}-reset`) ?? '')
+      if (used === undefined) return undefined
+      const resetsAt = Number.isFinite(reset) && reset > 0 ? reset * 1000 : Number.NaN
+      return {
+        remaining: Math.max(0, 100 - used),
+        resetAt: Number.isFinite(resetsAt) ? duration(resetsAt - Date.now()) : undefined,
+        resetInMs: Number.isFinite(resetsAt) ? resetsAt - Date.now() : undefined,
+      }
+    }
+    const snapshot = claudeSnapshot(spec, reading('5h'), reading('7d'), undefined)
+    if (snapshot.ok === true) return snapshot
+    return { ok: false, reason: response.status === 429 ? 'rate-limited' : 'no-quota-buckets', message: `gateway answered HTTP ${String(response.status)}` }
+  }
+
   /** Probe one provider, reusing a fresh snapshot. */
   const probe = async (selected) => {
     const key = `${selected.provider}\u0000${selected.model}`
@@ -434,6 +542,7 @@ export function apply(ctx, config) {
         else if (spec.kind === 'deepseek-account-balance') value = await deepseekAccountBalance(spec)
         else if (spec.kind === 'deepseek-api-balance') value = await deepseekApiBalance(spec)
         else if (spec.kind === 'claude-oauth-usage') value = await claudeUsage(spec)
+        else if (spec.kind === 'ofm-gateway') value = await ofmGatewayQuota(spec, selected)
         else value = { ok: false, reason: 'unsupported-kind' }
       } catch (error) {
         value = { ok: false, reason: 'probe-failed', message: error instanceof Error ? error.message : String(error) }
@@ -474,7 +583,17 @@ export function apply(ctx, config) {
           session = url.searchParams.get('session') ?? undefined
           const provider = url.searchParams.get('provider')
           const model = url.searchParams.get('model')
-          if (provider !== null && provider.length > 0) explicit = { provider, model: model ?? '' }
+          if (provider !== null && provider.length > 0) {
+            // A caller that names only the provider (auto-continue, auto-shutdown)
+            // gets the model that provider last served, which a gateway source
+            // such as Our Free Model needs to tell Claude from MiniMax.
+            let resolved = model ?? ''
+            if (resolved.length === 0) {
+              const known = [...lastBySession.values(), lastAny].filter(entry => entry?.provider === provider && typeof entry.model === 'string' && entry.model.length > 0)
+              if (known.length > 0) resolved = known[known.length - 1].model
+            }
+            explicit = { provider, model: resolved }
+          }
         } catch {
           session = undefined
         }

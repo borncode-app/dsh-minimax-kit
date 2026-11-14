@@ -11,6 +11,17 @@
             kind: minimax-coding-plan
             baseURL: https://api.minimax.io
             apiKeyEnv: MINIMAX_API_KEY
+          # Models served through Our Free Model: Claude windows come from the
+          # rate-limit headers its gateway passes through, MiniMax from the
+          # minimax-api entry above. The gateway is found beside Our Free
+          # Model's owner.lock; set gatewayURL to pin it.
+          our-free-model:
+            kind: ofm-gateway
+            baseURL: http://127.0.0.1
+            gatewayURL: ''
+            minimaxFallback: minimax-api
+            probeModel: claude/claude-haiku-5-5
+            cacheSeconds: 300
           # DeepSeek Platform account wallet balances.
           deepseek-account:
             kind: deepseek-account-balance

@@ -63,6 +63,85 @@ window.__ModuleLoader__.load({
       bonus: 'bonus',
     }
 
+    /** Our Free Model's account-quota route; the browser's own session authenticates it. */
+    const OFM_SUBSCRIPTIONS = '/api/our-free-model/subscriptions'
+
+    /** Compact "1h 20m" text for a reset time. */
+    function untilText(iso) {
+      const ms = typeof iso === 'string' ? Date.parse(iso) - Date.now() : Number.NaN
+      if (!Number.isFinite(ms) || ms <= 0) return undefined
+      const minutes = Math.round(ms / 60000)
+      const days = Math.floor(minutes / 1440)
+      const hours = Math.floor((minutes % 1440) / 60)
+      const rest = minutes % 60
+      if (days > 0) return `${days}d ${hours}h`
+      return hours > 0 ? `${hours}h ${rest}m` : `${rest}m`
+    }
+
+    /**
+     * Map the Host snapshot's provider/model onto an Our Free Model channel id.
+     * A model id reads `subscription:magpie/<channel>/<model>` or `<channel>/<model>`.
+     */
+    function channelOf(host) {
+      const model = String(host?.model ?? '')
+      const hit = /^(?:subscription:magpie\/)?([^/]+)\//u.exec(model)
+      const channel = (hit?.[1] ?? '').toLowerCase()
+      if (channel.length > 0 && channel !== 'our-free-model') return channel
+      const provider = String(host?.provider ?? '').toLowerCase()
+      if (provider === 'anthropic') return 'claude'
+      if (provider === 'minimax-api') return 'minimax'
+      return provider
+    }
+
+    /** One quota reading from Our Free Model for the selected model, or nothing. */
+    async function ofmSnapshot(host) {
+      if (host === undefined || host === null || host.reason === 'no-model-yet') return undefined
+      let accounts
+      try {
+        const response = await fetch(OFM_SUBSCRIPTIONS, { headers: { accept: 'application/json' } })
+        if (!response.ok) return undefined
+        accounts = (await response.json())?.accounts
+      } catch {
+        return undefined
+      }
+      if (!Array.isArray(accounts)) return undefined
+      const channel = channelOf(host)
+      const account = accounts.find(row => row?.enabled !== false
+        && (String(row?.provider ?? '').toLowerCase() === channel
+          || String(row?.provider ?? '').toLowerCase().startsWith(channel)
+          || channel.startsWith(String(row?.provider ?? '').toLowerCase()))
+        && row?.quota?.status === 'ok')
+      if (account === undefined) return undefined
+      const quota = account.quota
+      const windows = Array.isArray(quota.windows) ? quota.windows : []
+      const five = quota.fiveHour ?? windows.find(row => row.kind === 'five_hour')
+      const week = quota.weekly ?? windows.find(row => row.kind === 'weekly')
+      const percent = typeof five?.remainingPercent === 'number' ? Math.round(five.remainingPercent) : undefined
+      const weeklyPercent = typeof week?.remainingPercent === 'number' ? Math.round(week.remainingPercent) : undefined
+      const details = []
+      if (percent !== undefined) details.push({ key: 'window', value: `${percent}%` })
+      const resetIn = untilText(five?.resetsAt)
+      if (resetIn !== undefined) details.push({ key: 'resetIn', value: resetIn })
+      if (weeklyPercent !== undefined) details.push({ key: 'weekly', value: `${weeklyPercent}%` })
+      const weekResetIn = untilText(week?.resetsAt)
+      if (weekResetIn !== undefined) details.push({ key: 'weeklyResetIn', value: weekResetIn })
+      if (quota.balance?.amount != null && quota.balance.unlimited !== true) {
+        details.push({ key: 'balance', value: `${String(quota.balance.amount)} ${String(quota.balance.unit ?? '')}`.trim() })
+      }
+      if (percent === undefined && weeklyPercent === undefined && details.length === 0) return undefined
+      return {
+        ok: true,
+        kind: 'ofm-subscription',
+        provider: host.provider,
+        model: host.model,
+        source: 'our-free-model',
+        percent: percent ?? weeklyPercent,
+        weeklyPercent: percent === undefined ? undefined : weeklyPercent,
+        details,
+        primary: percent === undefined && weeklyPercent === undefined ? details[0] : undefined,
+      }
+    }
+
     /** Fill `{name}` placeholders from one values object. */
     function format(text, values) {
       if (values === undefined) return text
@@ -150,7 +229,11 @@ window.__ModuleLoader__.load({
               const response = await fetch(`${ENDPOINT}?session=${encodeURIComponent(String(sessionId))}`, {
                 headers: { accept: 'application/json' },
               })
-              const body = await response.json()
+              let body = await response.json()
+              // The Host probe needs a direct MiniMax/Claude credential. When it has
+              // none, the model may be served by Our Free Model, which already meters
+              // the account: read that reading through the signed-in browser.
+              if (body?.ok !== true) body = (await ofmSnapshot(body)) ?? body
               if (!cancelled) setSnapshot(body)
             } catch {
               /* a transient failure keeps the previous reading */

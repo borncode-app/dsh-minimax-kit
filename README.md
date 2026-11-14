@@ -65,6 +65,27 @@ this bundle refreshes that one itself.
 
 Turn `preferOfmGrant` off to read the API key first.
 
+### Models served through Our Free Model
+
+When the selected model is served by **Our Free Model** (provider
+`our-free-model`), the `model-quota` row uses the `ofm-gateway` source, which
+needs no login and no direct Claude token:
+
+- **Claude** (`claude/...`): one one-token message goes through Our Free Model's
+  local engine gateway, and the `anthropic-ratelimit-unified-5h/7d` headers the
+  gateway passes through give the 5-hour and weekly windows. The result is cached
+  for `cacheSeconds` (300 by default), so it costs one token per five minutes.
+- **MiniMax** (`minimax/...`): reads the plan quota with the key named by
+  `minimaxFallback` (the `minimax-api` entry, `MINIMAX_API_KEY`).
+
+The gateway is found beside Our Free Model's `owner.lock`; set `gatewayURL` to
+pin it. Nothing in Our Free Model is modified. A caller that names only the
+provider (for example BornCode's `auto-continue`) gets the model that provider
+last served.
+
+`minimax-credit` and `minimax-model-sync` still talk to MiniMax directly with
+the API key; only the quota chip goes through Our Free Model.
+
 ## Install
 
 1. Install this bundle.
@@ -113,6 +134,11 @@ hand-manage the model list Ã¢â‚¬â€ and the rest keep running.
 - The Our Free Model grant is never refreshed here. When Our Free Model renews
   it, the plugins pick the new token up on their next read; an expired one is
   skipped, and the API key answers instead.
+- `minimax-checkin` still needs the MiniMax Code grant: Our Free Model has no
+  check-in endpoint.
+- The MiniMax quota shown for an Our Free Model model is the API-key account's.
+  If that is a different account from the one Our Free Model's MiniMax channel
+  spends, the numbers will not match.
 
 ## License
 

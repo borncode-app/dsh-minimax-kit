@@ -95,11 +95,13 @@
         cacheSeconds: 60
         providers:
           our-free-model:
-            kind: minimax-coding-plan
-            baseURL: https://api.minimax.io
-            preferOfmGrant: true
+            kind: ofm-gateway
+            baseURL: http://127.0.0.1
+            gatewayURL: ''
+            minimaxFallback: minimax-api
+            probeModel: claude/claude-haiku-5-5
             ofmHome: ''
-            ofmAccount: minimax-code-global
+            cacheSeconds: 300
           minimax-api:
             kind: minimax-coding-plan
             baseURL: https://api.minimax.io
