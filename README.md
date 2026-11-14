@@ -1,7 +1,7 @@
 # dsh-minimax-kit
 
 The whole MiniMax set for DeepSeek Harness, in **one repository** and **one
-Plugins entry**. Installing this bundle is enough Ã¢â‚¬â€ it carries its own packages.
+Plugins entry**. Installing this bundle is enough — it carries its own packages.
 
 The five parts keep their own code, their own Config schema, and their own
 switch. Only the repository is shared.
@@ -21,7 +21,7 @@ packages/
   dsh-minimax-credit/       the proxy, the quota probe, the composer chip
   dsh-minimax-checkin/      the daily claim, the panel, the tool, the routes
   dsh-minimax-model-sync/   the route's model list
-  dsh-model-quota/          the composer quota chip (four provider probes)
+  dsh-model-quota/          the composer quota chip (five quota sources)
   dsh-minimax-bridge/       the skills bridge and the agent presets
 ```
 
@@ -54,7 +54,7 @@ two.
 
 When Our Free Model drives the MiniMax Code channel, that grant is the account
 the quota, credit, and check-in endpoints answer for. It is read as it stands
-and never refreshed here Ã¢â‚¬â€ Our Free Model owns the refresh cycle for its own
+and never refreshed here — Our Free Model owns the refresh cycle for its own
 channel, and a second refresher would rotate the refresh token out from under
 it.
 
@@ -94,7 +94,7 @@ the API key; only the quota chip goes through Our Free Model.
    Config schema.
 
 If the five standalone packages are also installed, turn them off in
-**Plugins** Ã¢â‚¬â€ otherwise their rows appear twice.
+**Plugins** — otherwise their rows appear twice.
 
 ## Develop
 
@@ -120,9 +120,9 @@ the `baseURL` the profile's `llm-pi-ai` `minimax-api` route must name.
 
 ## Turn one part off
 
-Individual rows stay addressable. In **Plugins**, disable the row you do not want
-for example `minimax-checkin` for a week away, or `minimax-model-sync` when you
-hand-manage the model list Ã¢â‚¬â€ and the rest keep running.
+Individual rows stay addressable. In **Plugins**, disable the row you do not
+want, for example `minimax-checkin` for a week away, or `minimax-model-sync` when
+you manage the model list by hand. The rest keep running.
 
 ## Limitations
 
@@ -142,4 +142,4 @@ hand-manage the model list Ã¢â‚¬â€ and the rest keep running.
 
 ## License
 
-MIT Ã¢â‚¬â€ see [LICENSE](LICENSE).
+MIT — see [LICENSE](LICENSE).
