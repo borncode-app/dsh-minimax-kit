@@ -1,36 +1,38 @@
 {
-    "name":  "@local/dsh-minimax-auth",
-    "version":  "1.0.0",
-    "private":  true,
-    "type":  "module",
-    "description":  "The MiniMax Code OAuth grant reader and refresher shared by dsh-minimax-credit and dsh-minimax-checkin.",
-    "author":  "BornCode (https://github.com/borncode-app)",
-    "license":  "MIT",
-    "repository":  {
-                       "type":  "git",
-                       "url":  "https://github.com/borncode-app/dsh-minimax-kit.git"
-                   },
-    "homepage":  "https://github.com/borncode-app/dsh-minimax-kit#readme",
-    "bugs":  {
-                 "url":  "https://github.com/borncode-app/dsh-minimax-kit/issues"
-             },
-    "keywords":  [
-                     "dsh",
-                     "deepseek-harness",
-                     "dsh-plugin",
-                     "minimax",
-                     "oauth",
-                     "auth",
-                     "token"
-                 ],
-    "exports":  {
-                    ".":  "./index.js"
-                },
-    "files":  [
-                  "index.js",
-                  "README.md"
-              ],
-    "scripts":  {
-                    "test":  "node --test"
-                }
+  "name": "@local/dsh-minimax-auth",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The MiniMax Code OAuth grant reader and refresher shared by dsh-minimax-credit and dsh-minimax-checkin, plus a reader for the grant Our Free Model stores.",
+  "author": "BornCode (https://github.com/borncode-app)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/borncode-app/dsh-minimax-kit.git"
+  },
+  "homepage": "https://github.com/borncode-app/dsh-minimax-kit#readme",
+  "bugs": {
+    "url": "https://github.com/borncode-app/dsh-minimax-kit/issues"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "dsh-plugin",
+    "minimax",
+    "oauth",
+    "auth",
+    "token"
+  ],
+  "exports": {
+    ".": "./index.js",
+    "./ofm-auth": "./ofm-auth.js"
+  },
+  "files": [
+    "index.js",
+    "ofm-auth.js",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test"
+  }
 }

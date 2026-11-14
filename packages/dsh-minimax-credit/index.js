@@ -1,5 +1,6 @@
 import z from '@deepseek-ai/schemastery'
 import { MinimaxCodeAuth, numberOf, oauthAccountOrigin, readConfig } from '@local/dsh-minimax-auth'
+import { ofmAccessToken } from '@local/dsh-minimax-auth/ofm-auth'
 import { createHash } from 'node:crypto'
 import { createServer } from 'node:http'
 
@@ -71,6 +72,18 @@ export const Config = z.object({
   creditsCacheMs: z.number().default(60000),
   /** Credential reference that resolves the plan API key. */
   apiKeyEnv: z.string().default('MINIMAX_API_KEY'),
+  /**
+   * Look for the MiniMax Code grant Our Free Model stores before the API key.
+   *
+   * Our Free Model runs a MiniMax Code channel of its own and keeps a signed-in
+   * grant for it. When that channel is the account in use, its grant is the one
+   * that answers the quota and credit endpoints, so it is read first.
+   */
+  preferOfmGrant: z.boolean().default(true),
+  /** Our Free Model home; empty means `$DSH_HOME` or `~/.dsh`. */
+  ofmHome: z.string().default(''),
+  /** The Our Free Model account key that holds the MiniMax Code grant. */
+  ofmAccount: z.string().default('minimax-code-global'),
   /** Milliseconds a quota reading is reused before another probe. */
   quotaCacheMs: z.number().default(60000),
   /** Refresh the OAuth token this long before it expires. */
@@ -108,6 +121,26 @@ export function oauthTokenURLFor(buildEnv, region) {
 export class TokenSource extends MinimaxCodeAuth {
   constructor(options) {
     super({ ...options, ErrorClass: CreditUnavailableError, codePrefix: 'MINIMAX_CREDIT_' })
+  }
+
+  /**
+   * The access token the credit route carries.
+   *
+   * The grant Our Free Model stores comes first: that plugin drives a MiniMax
+   * Code channel of its own, and the grant it keeps is the account the credit
+   * route bills. It is read as it stands and never refreshed here — Our Free
+   * Model owns that cycle for its own channel, and a second refresher would
+   * rotate the refresh token out from under it.
+   *
+   * The MiniMax Code desktop grant is the fallback, and the only one this
+   * plugin refreshes.
+   */
+  async token(options = {}) {
+    if (this.options.preferOfmGrant === true) {
+      const grant = await ofmAccessToken({ ofmHome: this.options.ofmHome, ofmAccount: this.options.ofmAccount })
+      if (grant !== undefined) return grant
+    }
+    return await super.token(options)
   }
 }
 
@@ -723,6 +756,9 @@ export function apply(ctx, config) {
     membershipURL: readConfig(config, 'membershipURL', 'https://agent.minimax.io/matrix/api/v1/commerce/get_membership_info'),
     walletURL: readConfig(config, 'walletURL', 'https://api.minimax.io/account/query_balance'),
     apiKeyEnv: readConfig(config, 'apiKeyEnv', 'MINIMAX_API_KEY'),
+    preferOfmGrant: readConfig(config, 'preferOfmGrant', true),
+    ofmHome: readConfig(config, 'ofmHome', ''),
+    ofmAccount: readConfig(config, 'ofmAccount', 'minimax-code-global'),
     quotaCacheMs: readConfig(config, 'quotaCacheMs', 60000),
     creditsCacheMs: readConfig(config, 'creditsCacheMs', 60000),
     refreshSkewMs: readConfig(config, 'refreshSkewMs', 600000),
@@ -737,6 +773,9 @@ export function apply(ctx, config) {
     tokenURL: oauthTokenURL,
     refreshSkewMs: settings.refreshSkewMs,
     fetchImpl: fetch,
+    preferOfmGrant: settings.preferOfmGrant,
+    ofmHome: settings.ofmHome,
+    ofmAccount: settings.ofmAccount,
   })
   const quota = new PlanQuota({ url: settings.quotaURL, cacheMs: settings.quotaCacheMs, fetchImpl: fetch })
   const credits = new CreditBalance({
@@ -759,6 +798,14 @@ export function apply(ctx, config) {
     credits,
     logger,
     resolveApiKey: async () => {
+      // The Our Free Model grant comes first: when that plugin drives the
+      // MiniMax Code channel, its grant is the account the quota and credit
+      // endpoints answer for. The API key is the fallback for a plain
+      // Token Plan account.
+      if (settings.preferOfmGrant === true) {
+        const grant = await ofmAccessToken({ ofmHome: settings.ofmHome, ofmAccount: settings.ofmAccount })
+        if (grant !== undefined) return grant
+      }
       try {
         const credentials = ctx.get('credentials')
         if (credentials === undefined) return undefined

@@ -30,7 +30,8 @@
     "locale/*.json",
     "docs",
     "icon.svg",
-    "README.md"
+    "README.md",
+    "packages"
   ],
   "dsh": {
     "bundle": {

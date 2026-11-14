@@ -41,7 +41,8 @@
                   "icon.svg"
               ],
     "dependencies":  {
-                         "@deepseek-ai/schemastery":  "~3.19.0"
+                         "@deepseek-ai/schemastery":  "~3.19.0",
+                         "@local/dsh-minimax-auth":  "link:../dsh-minimax-auth"
                      },
     "dsh":  {
                 "bundle":  {

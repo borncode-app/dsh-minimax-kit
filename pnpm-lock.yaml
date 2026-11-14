@@ -48,6 +48,9 @@ importers:
       '@deepseek-ai/schemastery':
         specifier: ~3.19.0
         version: 3.19.0
+      '@local/dsh-minimax-auth':
+        specifier: link:../dsh-minimax-auth
+        version: link:../dsh-minimax-auth
 
 packages:
 

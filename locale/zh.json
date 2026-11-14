@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "MiniMax 套件",
-    "description": "把五个 MiniMax 插件合并为一个 Plugins 条目：配额用尽后经由本机代理改用点数、每日签到按钮与工具、模型列表同步、Composer 配额芯片（minimax-coding-plan 与点数共用同一端点），以及 MiniMax Code 的技能与智能体。各部分仍是独立条目，可以单独关闭而不影响其他部分。三个 MiniMax Code MCP 服务器（rea、PhotoCraft、mcp-reverse）默认关闭，因为仅 rea 就会给每个请求增加 229 个工具。",
+    "description": "把五个 MiniMax 插件合并为一个 Plugins 条目，并自带各插件的包：配额用尽后经由本机代理改用点数、每日签到按钮与工具、模型列表同步、Composer 配额芯片（minimax-coding-plan 与点数共用同一端点），以及 MiniMax Code 的技能与智能体。各部分仍是独立条目，可以单独关闭而不影响其他部分。优先读取 Our Free Model 保存的 MiniMax Code 授权，其次回退到 Token Plan 的 API Key。三个 MiniMax Code MCP 服务器（rea、PhotoCraft、mcp-reverse）默认关闭，因为仅 rea 就会给每个请求增加 229 个工具。",
     "detail": "docs/DETAIL.zh.md"
   }
 }

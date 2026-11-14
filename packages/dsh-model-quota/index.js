@@ -1,4 +1,5 @@
 import z from '@deepseek-ai/schemastery'
+import { ofmAccessToken } from '@local/dsh-minimax-auth/ofm-auth'
 
 /** MiniMax coding-plan quota: per-window and weekly remaining percentages. */
 const MINIMAX_QUOTA_PATH = '/v1/api/openplatform/coding_plan/remains'
@@ -29,6 +30,18 @@ export const Config = z.object({
     apiKeyEnvs: z.array(z.string()).default([]),
     /** Credential record holding this route's account token. */
     credentialRecord: z.string(),
+    /**
+     * Look for the MiniMax Code grant Our Free Model stores before the API key.
+     *
+     * Our Free Model runs a MiniMax Code channel of its own and keeps a
+     * signed-in grant for it. When that channel is the account in use, its grant
+     * is the one that answers the quota endpoint.
+     */
+    preferOfmGrant: z.boolean().default(false),
+    /** Our Free Model home; empty means `$DSH_HOME` or `~/.dsh`. */
+    ofmHome: z.string().default(''),
+    /** The Our Free Model account key that holds the MiniMax Code grant. */
+    ofmAccount: z.string().default('minimax-code-global'),
     /** Model a header probe dispatches; only metre-based sources use it. */
     probeModel: z.string(),
     /** Seconds this source's snapshot stays fresh; defaults to the plugin's cacheSeconds. */
@@ -134,6 +147,27 @@ export function apply(ctx, config) {
     return { names }
   }
 
+  /**
+   * The credential one MiniMax source reads its quota with.
+   *
+   * The Our Free Model grant comes first when the source asks for it: that
+   * plugin drives a MiniMax Code channel of its own, and the grant it keeps is
+   * the account the quota endpoint answers for. The named API key is the
+   * fallback for a plain Token Plan account.
+   */
+  const minimaxCredential = async (spec) => {
+    if (spec.preferOfmGrant === true) {
+      const grant = await ofmAccessToken({ ofmHome: spec.ofmHome, ofmAccount: spec.ofmAccount })
+      if (grant !== undefined) return grant
+    }
+    const names = [spec.apiKeyEnv, ...(spec.apiKeyEnvs ?? [])].filter(name => typeof name === 'string' && name.length > 0)
+    for (const name of names) {
+      const value = await credential(name)
+      if (value !== undefined) return value
+    }
+    return undefined
+  }
+
   /** One authenticated GET returning parsed JSON, or a refusal describing why. */
   const getJSON = async (url, headers, what) => {
     let response
@@ -160,7 +194,7 @@ export function apply(ctx, config) {
 
   /** MiniMax coding plan: window and weekly remaining percentages. */
   const minimaxQuota = async (spec) => {
-    const key = await credential(spec.apiKeyEnv)
+    const key = await minimaxCredential(spec)
     if (key === undefined) return { ok: false, reason: 'missing-credential', credential: spec.apiKeyEnv }
     const answer = await getJSON(
       `${spec.baseURL.replace(/\/+$/u, '')}${MINIMAX_QUOTA_PATH}`,

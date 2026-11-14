@@ -128,6 +128,9 @@ export class MinimaxCodeAuth {
    * @param options.fetchImpl - The fetch implementation to use.
    * @param options.ErrorClass - Error class thrown for a problem the user can act on.
    * @param options.codePrefix - Code prefix, such as `MINIMAX_CREDIT_`.
+   * @param options.ofmHome - Our Free Model home; empty means `$DSH_HOME` or `~/.dsh`.
+   * @param options.ofmAccount - The Our Free Model account key to read.
+   * @param options.ofmTokenURL - OAuth token endpoint for the Our Free Model grant.
    */
   constructor(options) {
     this.options = options

@@ -6,17 +6,22 @@
 # separate rows: one crashing row does not take the others down, and each keeps
 # its own Config schema.
 #
-# Deselect the five bundles ("@local/dsh-minimax-credit", "@local/dsh-minimax-bridge",
+# The row names are paths beside this file, so the bundle carries its own
+# packages: installing this one bundle is enough. Deselect the five standalone
+# bundles ("@local/dsh-minimax-credit", "@local/dsh-minimax-bridge",
 # "@local/dsh-minimax-model-sync", "@local/dsh-minimax-checkin",
 # "@local/dsh-model-quota") while this one is selected, or their rows appear
-# twice. Keep them installed as profile dependencies: the rows below resolve
-# their packages from the profile, not from this bundle, so removing a package
-# leaves its row unable to start.
+# twice.
 - insert:
     # Local Anthropic-Messages proxy and credit failover. Point an llm-pi-ai
     # route's baseURL at http://127.0.0.1:45677/anthropic.
+    #
+    # `preferOfmGrant` reads the MiniMax Code grant Our Free Model stores
+    # first, and falls back to the Token Plan API key. When Our Free Model
+    # drives the MiniMax Code channel, its grant is the account the quota and
+    # credit endpoints answer for.
     - id: minimax-credit
-      name: '@local/dsh-minimax-credit'
+      name: './packages/dsh-minimax-credit/index.js'
       config:
         enabled: true
         listenHost: 127.0.0.1
@@ -31,13 +36,16 @@
         membershipURL: https://agent.minimax.io/matrix/api/v1/commerce/get_membership_info
         walletURL: https://api.minimax.io/account/query_balance
         apiKeyEnv: MINIMAX_API_KEY
+        preferOfmGrant: true
+        ofmHome: ''
+        ofmAccount: minimax-code-global
         quotaCacheMs: 60000
         creditsCacheMs: 60000
         refreshSkewMs: 600000
 
     # Daily check-in claim plus the composer chip and the minimax_daily_checkin tool.
     - id: minimax-checkin
-      name: '@local/dsh-minimax-checkin'
+      name: './packages/dsh-minimax-checkin/index.js'
       config:
         enabled: true
         minimaxHome: ''
@@ -55,7 +63,7 @@
 
     # Keeps the llm-pi-ai minimax-api route's model list current.
     - id: minimax-model-sync
-      name: '@local/dsh-minimax-model-sync'
+      name: './packages/dsh-minimax-model-sync/index.js'
       config:
         settingsNs: llm-pi-ai
         route: minimax-api
@@ -76,16 +84,29 @@
     # model; the other three entries are kept so the chip follows a model switch
     # instead of disappearing. This probe shares its endpoint with the credit
     # proxy above, which is why both live in one bundle.
+    #
+    # `our-free-model` is the route that carries the MiniMax Code channel, so it
+    # reads the grant Our Free Model stores. `minimax-api` is the Token Plan
+    # route and prefers that grant too, falling back to the API key.
     - id: model-quota
-      name: '@local/dsh-model-quota'
+      name: './packages/dsh-model-quota/index.js'
       config:
         endpoint: /plugins/model-quota
         cacheSeconds: 60
         providers:
+          our-free-model:
+            kind: minimax-coding-plan
+            baseURL: https://api.minimax.io
+            preferOfmGrant: true
+            ofmHome: ''
+            ofmAccount: minimax-code-global
           minimax-api:
             kind: minimax-coding-plan
             baseURL: https://api.minimax.io
             apiKeyEnv: MINIMAX_API_KEY
+            preferOfmGrant: true
+            ofmHome: ''
+            ofmAccount: minimax-code-global
           deepseek-account:
             kind: deepseek-account-balance
             baseURL: https://platform.deepseek.com
@@ -106,7 +127,7 @@
 
     # Serves the skills that live under the MiniMax Code home, in place.
     - id: minimax-bridge
-      name: '@local/dsh-minimax-bridge'
+      name: './packages/dsh-minimax-bridge/index.js'
       config:
         minimaxHome: ''
         includeUserSkills: true
@@ -117,7 +138,7 @@
 
     # Publishes the same home's agents as Harness agent presets.
     - id: minimax-agent-bridge
-      name: '@local/dsh-minimax-bridge/agents'
+      name: './packages/dsh-minimax-bridge/agents.js'
       config:
         minimaxHome: ''
         mode: coding

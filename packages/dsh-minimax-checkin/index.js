@@ -1,5 +1,6 @@
-﻿import z from '@deepseek-ai/schemastery'
+import z from '@deepseek-ai/schemastery'
 import { MinimaxCodeAuth, numberOf, oauthAccountOrigin, readConfig } from '@local/dsh-minimax-auth'
+import { ofmAccessToken } from '@local/dsh-minimax-auth/ofm-auth'
 import { createHash } from 'node:crypto'
 
 /**
@@ -56,6 +57,19 @@ export const Config = z.object({
   buildEnv: z.string().default('prod'),
   /** OAuth region directory under the MiniMax home. */
   region: z.string().default('en'),
+  /**
+   * Look for the MiniMax Code grant Our Free Model stores before the desktop
+   * grant.
+   *
+   * Our Free Model runs a MiniMax Code channel of its own and keeps a
+   * signed-in grant for it. When that channel is the account in use, its grant
+   * is the one the check-in service answers for.
+   */
+  preferOfmGrant: z.boolean().default(true),
+  /** Our Free Model home; empty means `$DSH_HOME` or `~/.dsh`. */
+  ofmHome: z.string().default(''),
+  /** The Our Free Model account key that holds the MiniMax Code grant. */
+  ofmAccount: z.string().default('minimax-code-global'),
   /** Origin that serves the MiniMax Code API. */
   apiBaseURL: z.string().default('https://agent.minimax.io'),
   /** OAuth token endpoint; empty derives it from the region. */
@@ -140,6 +154,26 @@ export function jsonSafe(value) {
 export class MinimaxAuth extends MinimaxCodeAuth {
   constructor(options) {
     super({ ...options, ErrorClass: CheckinUnavailableError, codePrefix: 'MINIMAX_CHECKIN_' })
+  }
+
+  /**
+   * The access token the check-in requests carry.
+   *
+   * The grant Our Free Model stores comes first: that plugin drives a MiniMax
+   * Code channel of its own, and the grant it keeps is the account the check-in
+   * service answers for. It is read as it stands and never refreshed here —
+   * Our Free Model owns that cycle for its own channel, and a second refresher
+   * would rotate the refresh token out from under it.
+   *
+   * The MiniMax Code desktop grant is the fallback, and the only one this
+   * plugin refreshes.
+   */
+  async token(options = {}) {
+    if (this.options.preferOfmGrant === true) {
+      const grant = await ofmAccessToken({ ofmHome: this.options.ofmHome, ofmAccount: this.options.ofmAccount })
+      if (grant !== undefined) return grant
+    }
+    return await super.token(options)
   }
 }
 
@@ -339,6 +373,9 @@ export function apply(ctx, config) {
     minimaxHome: readConfig(config, 'minimaxHome', ''),
     buildEnv: readConfig(config, 'buildEnv', 'prod'),
     region: readConfig(config, 'region', 'en'),
+    preferOfmGrant: readConfig(config, 'preferOfmGrant', true),
+    ofmHome: readConfig(config, 'ofmHome', ''),
+    ofmAccount: readConfig(config, 'ofmAccount', 'minimax-code-global'),
     apiBaseURL: readConfig(config, 'apiBaseURL', 'https://agent.minimax.io'),
     oauthTokenURL: readConfig(config, 'oauthTokenURL', ''),
     appVersion: readConfig(config, 'appVersion', '3.1.14'),
@@ -359,6 +396,9 @@ export function apply(ctx, config) {
     refreshSkewMs: settings.refreshSkewMs,
     timeoutMs: settings.timeoutMs,
     fetchImpl: fetch,
+    preferOfmGrant: settings.preferOfmGrant,
+    ofmHome: settings.ofmHome,
+    ofmAccount: settings.ofmAccount,
   })
   const client = new SigninClient({
     apiBaseURL: settings.apiBaseURL,
