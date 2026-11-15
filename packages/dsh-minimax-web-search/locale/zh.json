@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "MiniMax 网页搜索",
+    "description": "通过 MiniMax 原生的 web_search 服务端工具搜索，Token Plan 额度用完后改用 MiniMax 积分。"
+  }
+}

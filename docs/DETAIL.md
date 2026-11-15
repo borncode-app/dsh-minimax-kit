@@ -1,1 +1,1 @@
-![One Plugins entry fanning out into five independent rows](preview.svg)
+![One Plugins entry fanning out into six independent rows](preview.svg)

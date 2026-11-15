@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "MiniMax kit",
-    "description": "Installs the five MiniMax bundles as one Plugins entry, and carries their packages: credit failover through a local proxy, the daily check-in chip and tool, model-list sync, the composer quota chip (minimax-coding-plan probe shares the credit endpoint), and MiniMax Code's skills and agents. Each part stays its own row, so you can still turn one off without the others. It reads the MiniMax Code grant Our Free Model stores first, and falls back to the Token Plan API key. The three MiniMax Code MCP servers (rea, PhotoCraft, mcp-reverse) arrive off because rea alone adds 229 tools to every request.",
+    "description": "Installs the six MiniMax bundles as one Plugins entry, and carries their packages: credit failover through a local proxy, the daily check-in chip and tool, model-list sync, the composer quota chip (minimax-coding-plan probe shares the credit endpoint), web search through MiniMax's native web_search server tool, and MiniMax Code's skills and agents. Each part stays its own row, so you can still turn one off without the others. It reads the MiniMax Code grant Our Free Model stores first, and falls back to the Token Plan API key. The three MiniMax Code MCP servers (rea, PhotoCraft, mcp-reverse) arrive off because rea alone adds 229 tools to every request.",
     "detail": "docs/DETAIL.md"
   }
 }

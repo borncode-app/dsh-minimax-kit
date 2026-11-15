@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "MiniMax web search",
+    "description": "Runs web_search through MiniMax's native server tool, with a fallback to MiniMax credits once the Token Plan quota is spent."
+  }
+}

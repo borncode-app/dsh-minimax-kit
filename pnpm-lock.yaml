@@ -23,6 +23,9 @@ importers:
       '@local/dsh-minimax-model-sync':
         specifier: link:./packages/dsh-minimax-model-sync
         version: link:packages/dsh-minimax-model-sync
+      '@local/dsh-minimax-web-search':
+        specifier: link:./packages/dsh-minimax-web-search
+        version: link:packages/dsh-minimax-web-search
       '@local/dsh-model-quota':
         specifier: link:./packages/dsh-model-quota
         version: link:packages/dsh-model-quota
@@ -61,6 +64,15 @@ importers:
       '@deepseek-ai/schemastery':
         specifier: ~3.19.0
         version: 3.19.0
+
+  packages/dsh-minimax-web-search:
+    dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: ~3.19.0
+        version: 3.19.0
+      '@local/dsh-minimax-auth':
+        specifier: link:../dsh-minimax-auth
+        version: link:../dsh-minimax-auth
 
   packages/dsh-model-quota:
     dependencies:

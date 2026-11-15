@@ -2,9 +2,9 @@
 #
 # This bundle inserts the rows those bundles used to insert, naming the same
 # packages, so the credit proxy, the check-in chip, the model-list sync, the
-# composer quota chip and the MiniMax Code bridge keep their own code and stay
-# separate rows: one crashing row does not take the others down, and each keeps
-# its own Config schema.
+# composer quota chip, the MiniMax Code bridge, and the MiniMax web search
+# keep their own code and stay separate rows: one crashing row does not take
+# the others down, and each keeps its own Config schema.
 #
 # The row names are paths beside this file, so the bundle carries its own
 # packages: installing this one bundle is enough. Deselect the five standalone
@@ -126,6 +126,21 @@
               - ANTHROPIC_AUTH_TOKEN
             probeModel: claude-haiku-4-5
             cacheSeconds: 300
+
+    # Web search through MiniMax's native `web_search` server tool. The
+    # provider answers on MiniMax's servers, so a search costs one model turn
+    # and never touches a DeepSeek balance. When the Token Plan quota is spent,
+    # the same request continues on the MiniMax Code credit endpoint.
+    - id: minimax-web-search
+      name: '@local/dsh-minimax-web-search'
+      config:
+        baseURL: https://api.minimax.io/anthropic
+        model: MiniMax-M3.1-Flash
+        maxUses: 3
+        maxContinuations: 4
+        apiKeyEnv: MINIMAX_API_KEY
+        preferOfmGrant: true
+        creditBaseURL: https://agent.minimax.io/mavis/api/v1/llm/v1
 
     # Serves the skills that live under the MiniMax Code home, in place.
     - id: minimax-bridge

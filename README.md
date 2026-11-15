@@ -3,12 +3,12 @@
 The whole MiniMax set for DeepSeek Harness, in **one repository** and **one
 Plugins entry**. Installing this bundle is enough — it carries its own packages.
 
-The five parts keep their own code, their own Config schema, and their own
+The six parts keep their own code, their own Config schema, and their own
 switch. Only the repository is shared.
 
 | what stays separate | why |
 |---|---|
-| the credit proxy (port 45677), the check-in claim, the model-list sync, the MiniMax Code bridge, the quota chip | one crashing row does not take the others down |
+| the credit proxy (port 45677), the check-in claim, the model-list sync, the MiniMax Code bridge, the quota chip, the web-search provider | one crashing row does not take the others down |
 | one Config schema per row | the Plugins settings form stays short, and a bad field blocks only its own row |
 | one package per row | `git pull` and a code review stay scoped to the part you touched |
 
@@ -21,6 +21,7 @@ packages/
   dsh-minimax-credit/       the proxy, the quota probe, the composer chip
   dsh-minimax-checkin/      the daily claim, the panel, the tool, the routes
   dsh-minimax-model-sync/   the route's model list
+  dsh-minimax-web-search/   web search through MiniMax's native web_search
   dsh-model-quota/          the composer quota chip (five quota sources)
   dsh-minimax-bridge/       the skills bridge and the agent presets
 ```
@@ -38,6 +39,7 @@ two.
 | `minimax-credit` | `packages/dsh-minimax-credit` | local Anthropic-Messages proxy that fails over to MiniMax credits after the plan quota is spent, plus the composer chip |
 | `minimax-checkin` | `packages/dsh-minimax-checkin` | daily check-in claim, composer chip, `minimax_daily_checkin` tool |
 | `minimax-model-sync` | `packages/dsh-minimax-model-sync` | keeps the `llm-pi-ai` `minimax-api` route's model list current |
+| `minimax-web-search` | `packages/dsh-minimax-web-search` | web search through MiniMax's native `web_search` server tool, with a credit failover |
 | `model-quota` | `packages/dsh-model-quota` | composer quota chip (`minimax-coding-plan` probe uses the same endpoint as credit), off when the selected provider is not MiniMax |
 | `minimax-bridge` | `packages/dsh-minimax-bridge` | serves `~/.minimax` skills in place |
 | `minimax-agent-bridge` | `packages/dsh-minimax-bridge/agents.js` | publishes the same home's agents as presets |

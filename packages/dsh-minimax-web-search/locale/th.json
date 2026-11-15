@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "ค้นหาเว็บผ่าน MiniMax",
+    "description": "สั่ง web_search ผ่านเครื่องมือ server ของ MiniMax และใช้เครดิตของ MiniMax ต่อเมื่อโควตา Token Plan หมดแล้ว"
+  }
+}

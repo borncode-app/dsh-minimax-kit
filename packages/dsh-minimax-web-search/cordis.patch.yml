@@ -1,0 +1,22 @@
+# Inserts the MiniMax web-search provider row into the profile composition.
+- insert:
+    - id: minimax-web-search
+      name: '@local/dsh-minimax-web-search'
+      config:
+        # Anthropic-compatible endpoint that serves the native `web_search`
+        # server tool. `/v1/messages` is appended.
+        baseURL: https://api.minimax.io/anthropic
+        # Model that answers the search.
+        model: MiniMax-M3.1-Flash
+        # How many `web_search` server-tool uses one request may make.
+        maxUses: 3
+        # How many continuation rounds a `pause_turn` may take before the
+        # provider answers with what it has.
+        maxContinuations: 4
+        # Credential reference holding the MiniMax Token Plan API key.
+        apiKeyEnv: MINIMAX_API_KEY
+        # Read the MiniMax Code grant Our Free Model stores first; the Token
+        # Plan key is the fallback.
+        preferOfmGrant: true
+        # MiniMax Code credit endpoint that answers once the plan is spent.
+        creditBaseURL: https://agent.minimax.io/mavis/api/v1/llm/v1
