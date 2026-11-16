@@ -42,7 +42,7 @@ two.
 | `minimax-web-search` | `packages/dsh-minimax-web-search` | web search through MiniMax's native `web_search` server tool, with a credit failover |
 | `model-quota` | `packages/dsh-model-quota` | composer quota chip (`minimax-coding-plan` probe uses the same endpoint as credit), off when the selected provider is not MiniMax |
 | `minimax-bridge` | `packages/dsh-minimax-bridge` | serves `~/.minimax` skills in place |
-| `minimax-agent-bridge` | `packages/dsh-minimax-bridge/agents.js` | publishes the same home's agents as presets |
+| `minimax-agent-bridge` | `packages/dsh-minimax-bridge/agents.js` | publishes the same home's agents as presets — **disabled by default** (`includeBuiltin`/`includeUserAgents` both `false`) so the roster keeps only the Harness's own agents |
 | `minimax-mcp-rea`, `minimax-mcp-photocraft`, `minimax-mcp-reverse` | `@deepseek-ai/dsh-mcp-client` | MiniMax Code's MCP servers, **shipped disabled** |
 
 ## Which credential it reads

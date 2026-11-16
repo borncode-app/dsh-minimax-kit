@@ -154,13 +154,17 @@
         watch: true
 
     # Publishes the same home's agents as Harness agent presets.
+    #
+    # The MiniMax Code roles are not published: the user keeps only the
+    # Harness's own agents (standard, ptc, minimal, cordis), so the roster
+    # stays short and every agent reads one set of standing instructions.
     - id: minimax-agent-bridge
       name: '@local/dsh-minimax-bridge/agents'
       config:
         minimaxHome: ''
         mode: coding
-        includeBuiltin: true
-        includeUserAgents: true
+        includeBuiltin: false
+        includeUserAgents: false
         stripSections:
           - Harness
           - Media Output
