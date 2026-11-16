@@ -8,7 +8,7 @@ switch. Only the repository is shared.
 
 | what stays separate | why |
 |---|---|
-| the credit proxy (port 45677), the check-in claim, the model-list sync, the MiniMax Code bridge, the quota chip, the web-search provider | one crashing row does not take the others down |
+| the credit proxy (port 45677), the check-in claim, the model-list sync, the MiniMax Code bridge, the web-search provider | one crashing row does not take the others down |
 | one Config schema per row | the Plugins settings form stays short, and a bad field blocks only its own row |
 | one package per row | `git pull` and a code review stay scoped to the part you touched |
 
@@ -18,32 +18,34 @@ switch. Only the repository is shared.
 dsh-minimax-kit/            the bundle: cordis.patch.yml, locale, docs, icon
 packages/
   dsh-minimax-auth/         shared grant reader (a library, not a row)
-  dsh-minimax-credit/       the proxy, the quota probe, the composer chip
+  dsh-minimax-credit/       the proxy and the quota probe
   dsh-minimax-checkin/      the daily claim, the panel, the tool, the routes
   dsh-minimax-model-sync/   the route's model list
   dsh-minimax-web-search/   web search through MiniMax's native web_search
-  dsh-model-quota/          the composer quota chip (five quota sources)
   dsh-minimax-bridge/       the skills bridge and the agent presets
 ```
 
 `packages/dsh-minimax-auth` is a plain library: it declares no
-`dsh.bundle.patch` and inserts no Loader row. `dsh-minimax-credit`,
-`dsh-minimax-checkin` and `dsh-model-quota` import it through a `link:` to the
-sibling package, so one refresh path writes the MiniMax Code grant instead of
-two.
+`dsh.bundle.patch` and inserts no Loader row. `dsh-minimax-credit` and
+`dsh-minimax-checkin` import it through a `link:` to the sibling package, so one
+refresh path writes the MiniMax Code grant instead of two.
 
 ## What it inserts
 
 | row | package | what it does |
 |---|---|---|
-| `minimax-credit` | `packages/dsh-minimax-credit` | local Anthropic-Messages proxy that fails over to MiniMax credits after the plan quota is spent, plus the composer chip |
+| `minimax-credit` | `packages/dsh-minimax-credit` | local Anthropic-Messages proxy that fails over to MiniMax credits after the plan quota is spent |
 | `minimax-checkin` | `packages/dsh-minimax-checkin` | daily check-in claim, composer chip, `minimax_daily_checkin` tool |
 | `minimax-model-sync` | `packages/dsh-minimax-model-sync` | keeps the `llm-pi-ai` `minimax-api` route's model list current |
 | `minimax-web-search` | `packages/dsh-minimax-web-search` | web search through MiniMax's native `web_search` server tool, with a credit failover |
-| `model-quota` | `packages/dsh-model-quota` | composer quota chip (`minimax-coding-plan` probe uses the same endpoint as credit), off when the selected provider is not MiniMax |
 | `minimax-bridge` | `packages/dsh-minimax-bridge` | serves `~/.minimax` skills in place |
 | `minimax-agent-bridge` | `packages/dsh-minimax-bridge/agents.js` | publishes the same home's agents as presets — **disabled by default** (`includeBuiltin`/`includeUserAgents` both `false`) so the roster keeps only the Harness's own agents |
 | `minimax-mcp-rea`, `minimax-mcp-photocraft`, `minimax-mcp-reverse` | `@deepseek-ai/dsh-mcp-client` | MiniMax Code's MCP servers, **shipped disabled** |
+
+The composer quota chip (`model-quota`) is **not** part of this bundle: it moved
+out so a profile can run the proxy without a quota probe. The credit proxy keeps
+its own reading on `/status`, which answers the same question for anything that
+asks it.
 
 ## Which credential it reads
 
@@ -67,26 +69,10 @@ this bundle refreshes that one itself.
 
 Turn `preferOfmGrant` off to read the API key first.
 
-### Models served through Our Free Model
-
-When the selected model is served by **Our Free Model** (provider
-`our-free-model`), the `model-quota` row uses the `ofm-gateway` source, which
-needs no login and no direct Claude token:
-
-- **Claude** (`claude/...`): one one-token message goes through Our Free Model's
-  local engine gateway, and the `anthropic-ratelimit-unified-5h/7d` headers the
-  gateway passes through give the 5-hour and weekly windows. The result is cached
-  for `cacheSeconds` (300 by default), so it costs one token per five minutes.
-- **MiniMax** (`minimax/...`): reads the plan quota with the key named by
-  `minimaxFallback` (the `minimax-api` entry, `MINIMAX_API_KEY`).
-
-The gateway is found beside Our Free Model's `owner.lock`; set `gatewayURL` to
-pin it. Nothing in Our Free Model is modified. A caller that names only the
-provider (for example BornCode's `auto-continue`) gets the model that provider
-last served.
-
-`minimax-credit` and `minimax-model-sync` still talk to MiniMax directly with
-the API key; only the quota chip goes through Our Free Model.
+`minimax-credit` and `minimax-model-sync` talk to MiniMax directly with that
+credential. The credit proxy's own `/status` route reports the plan reading
+(`percent`, `weeklyPercent`, `resetInMs`) and the credit balance, so anything
+that needs a quota number can read it there without a second probe.
 
 ## Install
 

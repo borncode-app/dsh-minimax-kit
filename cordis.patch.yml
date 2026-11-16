@@ -79,54 +79,6 @@
           - MiniMax-M2.7-highspeed
         refreshMinutes: 360
 
-    # The composer chip under the input: remaining quota or balance for the
-    # selected model's provider. Only `minimax-api` reports numbers for a MiniMax
-    # model; the other three entries are kept so the chip follows a model switch
-    # instead of disappearing. This probe shares its endpoint with the credit
-    # proxy above, which is why both live in one bundle.
-    #
-    # `our-free-model` is the route that carries the MiniMax Code channel, so it
-    # reads the grant Our Free Model stores. `minimax-api` is the Token Plan
-    # route and prefers that grant too, falling back to the API key.
-    - id: model-quota
-      name: '@local/dsh-model-quota'
-      config:
-        endpoint: /plugins/model-quota
-        cacheSeconds: 60
-        providers:
-          our-free-model:
-            kind: ofm-gateway
-            baseURL: http://127.0.0.1
-            gatewayURL: ''
-            minimaxFallback: minimax-api
-            probeModel: claude/claude-haiku-5-5
-            ofmHome: ''
-            cacheSeconds: 300
-          minimax-api:
-            kind: minimax-coding-plan
-            baseURL: https://api.minimax.io
-            apiKeyEnv: MINIMAX_API_KEY
-            preferOfmGrant: true
-            ofmHome: ''
-            ofmAccount: minimax-code-global
-          deepseek-account:
-            kind: deepseek-account-balance
-            baseURL: https://platform.deepseek.com
-            credentialRecord: deepseek-account-platform/default
-          deepseek-official:
-            kind: deepseek-api-balance
-            baseURL: https://api.deepseek.com
-            apiKeyEnv: DEEPSEEK_API_KEY
-          anthropic:
-            kind: claude-oauth-usage
-            baseURL: https://api.anthropic.com
-            apiKeyEnv: ANTHROPIC_OAUTH_TOKEN
-            apiKeyEnvs:
-              - ANTHROPIC_API_KEY
-              - ANTHROPIC_AUTH_TOKEN
-            probeModel: claude-haiku-4-5
-            cacheSeconds: 300
-
     # Web search through MiniMax's native `web_search` server tool. The
     # provider answers on MiniMax's servers, so a search costs one model turn
     # and never touches a DeepSeek balance. When the Token Plan quota is spent,

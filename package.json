@@ -44,7 +44,6 @@
                          "@local/dsh-minimax-checkin":  "link:./packages/dsh-minimax-checkin",
                          "@local/dsh-minimax-credit":  "link:./packages/dsh-minimax-credit",
                          "@local/dsh-minimax-model-sync":  "link:./packages/dsh-minimax-model-sync",
-                         "@local/dsh-minimax-web-search":  "link:./packages/dsh-minimax-web-search",
-                         "@local/dsh-model-quota":  "link:./packages/dsh-model-quota"
+                         "@local/dsh-minimax-web-search":  "link:./packages/dsh-minimax-web-search"
                      }
 }

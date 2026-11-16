@@ -26,9 +26,6 @@ importers:
       '@local/dsh-minimax-web-search':
         specifier: link:./packages/dsh-minimax-web-search
         version: link:packages/dsh-minimax-web-search
-      '@local/dsh-model-quota':
-        specifier: link:./packages/dsh-model-quota
-        version: link:packages/dsh-model-quota
 
   packages/dsh-minimax-auth: {}
 
