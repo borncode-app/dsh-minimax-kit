@@ -1,3 +1,23 @@
+> **This repository has moved into one monorepo.**
+>
+> The MiniMax plugins — credit failover, the daily check-in, model-list sync,
+> web search, the MiniMax Code bridge, and the model quota — now live in
+> **[`borncode-app/dsh-borncode`](https://github.com/borncode-app/dsh-borncode)**,
+> one repository with one Plugins entry.
+>
+> | this repo | new home |
+> |---|---|
+> | `dsh-minimax-auth` | `packages/dsh-minimax-auth` |
+> | `dsh-minimax-credit` | `packages/dsh-minimax-credit` |
+> | `dsh-minimax-checkin` | `packages/dsh-minimax-checkin` |
+> | `dsh-minimax-model-sync` | `packages/dsh-minimax-model-sync` |
+> | `dsh-minimax-web-search` | `packages/dsh-minimax-web-search` |
+> | `dsh-minimax-bridge` | `packages/dsh-minimax-bridge` |
+> | `dsh-model-quota` | `packages/dsh-model-quota` |
+>
+> The code and its history are unchanged; only the repository is shared. Install
+> `dsh-borncode` instead of this bundle. This repository stays open so the old
+> links keep working.
 # dsh-minimax-kit
 
 The whole MiniMax set for DeepSeek Harness, in **one repository** and **one
