@@ -278,6 +278,39 @@ test('readiness follows the key, then the grant', async () => {
   assert.equal(await withoutAny.ready('minimax-api'), false)
 })
 
+test('a credential service that mounts after the plugin still resolves', async () => {
+  // The credential service initializes asynchronously, so a provider that
+  // captured `ctx.get('credentials')` while applying would hold undefined
+  // forever. The provider must look the service up per search instead.
+  let mounted
+  const provider = new MinimaxSearchProvider(() => options(), {
+    credentials: () => mounted,
+    fetchImpl: async () => new Response(JSON.stringify({
+      stop_reason: 'end_turn',
+      content: [
+        {
+          type: 'web_search_tool_result',
+          content: [{ type: 'web_search_result', url: 'https://example.com/a', title: 'A' }],
+        },
+        { type: 'text', text: 'answer' },
+      ],
+    }), { status: 200, headers: { 'content-type': 'application/json' } }),
+  })
+
+  // Before the service mounts, readiness falls through to the grant.
+  assert.equal(await provider.ready('minimax-api'), false)
+  await assert.rejects(
+    () => provider.search({ query: 'x' }),
+    /no API key/u,
+  )
+
+  // Once it mounts, the same provider finds the key with no re-registration.
+  mounted = credentials('sk-cp-late')
+  assert.equal(await provider.ready('minimax-api'), true)
+  const result = await provider.search({ query: 'x' })
+  assert.equal(result.sources.length, 1)
+})
+
 test('an aborted search reports cancellation', async () => {
   const controller = new AbortController()
   controller.abort()

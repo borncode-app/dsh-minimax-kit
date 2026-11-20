@@ -226,11 +226,21 @@ export function searchPrompt(query) {
  * or the continuation budget runs out.
  */
 export class MinimaxSearchProvider {
+  /**
+   * @param resolveOptions - the options for the next operation.
+   * @param options.credentials - the credential service, or a thunk returning
+   *   it. A thunk is what a plugin passes: the service initializes
+   *   asynchronously, so reading `ctx.get('credentials')` while the plugin
+   *   applies yields `undefined` for the whole life of the process, and the
+   *   Token Plan key would never be found.
+   */
   constructor(resolveOptions, options = {}) {
     this.resolveOptions = resolveOptions
     this.tokens = options.tokens
     this.fetchImpl = options.fetchImpl ?? fetch
-    this.credentials = options.credentials
+    this.credentials = typeof options.credentials === 'function'
+      ? options.credentials
+      : () => options.credentials
   }
 
   /** Stable id this provider registers under in the search registry. */
@@ -337,9 +347,20 @@ export class MinimaxSearchProvider {
     }
   }
 
-  /** The Token Plan key, or undefined when none is configured. */
+  /**
+   * The Token Plan key, or undefined when none is configured.
+   *
+   * The service is read at call time, not at construction: the credential
+   * service mounts asynchronously and is still absent when this plugin
+   * applies.
+   */
   async resolveApiKey(options) {
-    const credentials = this.credentials
+    let credentials
+    try {
+      credentials = this.credentials()
+    } catch {
+      return undefined
+    }
     if (credentials === undefined) return undefined
     try {
       const hit = await credentials.resolve(options.apiKeyEnv)
@@ -540,8 +561,10 @@ export function apply(ctx, config) {
     tokens,
     fetchImpl: fetch,
     // The credential service is optional: without it the provider still works
-    // through the MiniMax Code grant.
-    credentials: ctx.get('credentials'),
+    // through the MiniMax Code grant. It is looked up per search rather than
+    // captured here, because it mounts asynchronously and is still absent while
+    // this plugin applies.
+    credentials: () => ctx.get('credentials'),
   })
   ctx.web.registerSearchProvider({
     id: provider.id,
